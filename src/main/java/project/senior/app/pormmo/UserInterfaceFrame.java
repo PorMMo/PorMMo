@@ -83,14 +83,19 @@ public class UserInterfaceFrame extends JFrame
         
         pack();
         setVisible(true);
-
     }
 
     private void showFileSelect()
     {
         JFileChooser jFC = new JFileChooser();
+        jFC.setAcceptAllFileFilterUsed(false);
+        jFC.setFileFilter(new ExtFileFilter(new String[]{".mp4"}));
+        jFC.setFileFilter(new ExtFileFilter(new String[]{".mpg"}));       
+        jFC.setFileFilter(new ExtFileFilter(new String[]{".avi"}));
+        jFC.setFileFilter(new ExtFileFilter(new String[]{".wmv"}));
+
         jFC.showDialog(this, "Open");
-        selectedInputFile = jFC.getSelectedFile();
+        selectedInputFile = jFC.getSelectedFile();  
         OpenSource();
     }
 
