@@ -3,7 +3,7 @@ package project.senior.app.pormmo;
 import com.sun.jna.NativeLibrary;
 
 /**
- * @author John Fisher, Shelby Copeland
+ * @author John Fisher, Shelby Copeland, Max De Benedetti
  */
 public class App 
 {
