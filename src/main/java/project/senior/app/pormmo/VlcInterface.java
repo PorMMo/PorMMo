@@ -1,13 +1,17 @@
 package project.senior.app.pormmo;
 
+import com.sun.jna.Native;
+import com.sun.jna.NativeLibrary;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JPanel;
+import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 /**
  * @author John Fisher
@@ -24,6 +28,7 @@ public class VlcInterface extends JPanel
     {
         this.sourceFile = sourceFile;
         
+        Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
         mPlayerFactory = new MediaPlayerFactory();        
         mPlayer = mPlayerFactory.newEmbeddedMediaPlayer();
             mPlayer.addMediaPlayerEventListener(new PlayerEventListener());
