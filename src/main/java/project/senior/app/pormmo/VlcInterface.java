@@ -1,7 +1,6 @@
 package project.senior.app.pormmo;
 
 import com.sun.jna.Native;
-import com.sun.jna.NativeLibrary;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class VlcInterface extends JPanel
         File dir = new File(".");
             try
         {
-            mPlayer.setSnapshotDirectory(dir.getCanonicalPath() + "/captures/");
+            mPlayer.setSnapshotDirectory(dir.getCanonicalPath() + "/captures");
         }
         catch (IOException ex)
         {

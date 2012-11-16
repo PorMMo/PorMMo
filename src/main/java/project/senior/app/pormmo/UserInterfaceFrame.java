@@ -109,7 +109,7 @@ public class UserInterfaceFrame extends JFrame
             catch (java.lang.NoClassDefFoundError e)
             {
                 System.out.println("Error: " + e.getMessage());
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
@@ -154,7 +154,7 @@ public class UserInterfaceFrame extends JFrame
                         outputPanel.DrawBufferedImage(snapshot);
                         outputPanel.setPreferredSize(imageSize);
 
-                        setSize(new Dimension((int)imageSize.getWidth()+(controlPanel.getWidth()*3), (int)imageSize.getHeight()+(controlPanel.getHeight()*3)));
+                        setSize(new Dimension((int)imageSize.getWidth()+(controlPanel.getWidth()), (int)imageSize.getHeight()+(controlPanel.getHeight()*3)));
                         
                         validate();
                         repaint();
