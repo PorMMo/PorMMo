@@ -89,10 +89,8 @@ public class UserInterfaceFrame extends JFrame
     {
         JFileChooser jFC = new JFileChooser();
         jFC.setAcceptAllFileFilterUsed(false);
-        jFC.setFileFilter(new ExtFileFilter(new String[]{".mp4"}));
-        jFC.setFileFilter(new ExtFileFilter(new String[]{".mpg"}));       
-        jFC.setFileFilter(new ExtFileFilter(new String[]{".avi"}));
-        jFC.setFileFilter(new ExtFileFilter(new String[]{".wmv"}));
+        jFC.setFileFilter(new ExtFileFilter(new String[]{".mp4",".mpg",".avi",".wmv"}));
+        jFC.setFileFilter(new ExtFileFilter(new String[]{".png",".jpg"}));       
 
         jFC.showDialog(this, "Open");
         selectedInputFile = jFC.getSelectedFile();  
@@ -109,7 +107,6 @@ public class UserInterfaceFrame extends JFrame
             catch (java.lang.NoClassDefFoundError e)
             {
                 System.out.println("Error: " + e.getMessage());
-                //e.printStackTrace();
             }
         }
     }
