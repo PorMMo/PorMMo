@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.027" errors="1" skipped="0" tests="1" name="project.senior.app.pormmo.AppTest">
+<testsuite failures="0" time="0.016" errors="0" skipped="0" tests="1" name="project.senior.app.pormmo.AppTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/local/jdk1.7.0_09/jre/lib/amd64"/>
@@ -59,11 +59,5 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.009" classname="project.senior.app.pormmo.AppTest" name="testMain">
-    <error type="java.lang.AssertionError">java.lang.AssertionError
-	at project.senior.app.pormmo.AppTest.testMain(AppTest.java:35)
-</error>
-    <system-out>******************************testMain
-</system-out>
-  </testcase>
+  <testcase time="0.004" classname="project.senior.app.pormmo.AppTest" name="testMain"/>
 </testsuite>

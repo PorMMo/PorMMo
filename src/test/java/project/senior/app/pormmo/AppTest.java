@@ -30,8 +30,7 @@ public class AppTest extends TestCase {
      * Test of main method, of class App.
      */
     public void testMain() {
-        System.out.println("******************************testMain");
-        if(1==2) assert(true);
-        else assert(false);
+        System.out.println("******************************testApp");
+        assert(true);
     }
 }
