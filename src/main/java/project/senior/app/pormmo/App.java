@@ -17,6 +17,7 @@ public class App
   
   public static void main(String[] args) 
   {
+      
     if (System.getProperty("os.name").startsWith("Windows")) 
     {         
       if(!System.getenv("ProgramFiles(x86)").isEmpty())
