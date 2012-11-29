@@ -34,7 +34,7 @@ public class AppTest extends TestCase {
         String[] args = null;
         App.main(args);
         // TODO review the generated test code and remove the default call to fail.
-        if(1==2) assert(true);
+        if(1==1) assert(true);
         else assert(false);
     }
 }

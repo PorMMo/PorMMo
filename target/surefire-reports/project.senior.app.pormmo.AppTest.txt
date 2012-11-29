@@ -1,7 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: project.senior.app.pormmo.AppTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.248 sec <<< FAILURE!
-testMain(project.senior.app.pormmo.AppTest)  Time elapsed: 0.235 sec  <<< ERROR!
-java.lang.AssertionError
-	at project.senior.app.pormmo.AppTest.testMain(AppTest.java:38)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.263 sec
