@@ -30,11 +30,8 @@ public class AppTest extends TestCase {
      * Test of main method, of class App.
      */
     public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        App.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        if(1==1) assert(true);
+        System.out.println("******************************testMain");
+        if(1==2) assert(true);
         else assert(false);
     }
 }
