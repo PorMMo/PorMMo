@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -172,7 +173,7 @@ public class UserInterfaceFrame extends JFrame
         
     }
     
-    private class UserInterfaceFrameMenuListener implements MouseListener
+    private class UserInterfaceFrameMenuListener extends MouseAdapter
     {
 
         @Override
@@ -188,26 +189,6 @@ public class UserInterfaceFrame extends JFrame
                     System.exit(0);
                     break;
             }
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e)
-        {
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e)
-        {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e)
-        {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e)
-        {
         }
     }
 }
