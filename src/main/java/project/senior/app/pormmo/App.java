@@ -18,7 +18,7 @@ public class App
       
     if (System.getProperty("os.name").startsWith("Windows")) 
     {         
-      if(System.getenv("ProgramFiles(x86)") == null)
+      if(System.getenv("ProgramFiles(x86)") != null)
       {
         String osArch = System.getenv("ProgramFiles(x86)");
         //::We now know that PF x86 exists and is not empty
