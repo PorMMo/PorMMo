@@ -152,7 +152,10 @@ public class UserInterfaceFrame extends JFrame
                         outputPanel.DrawBufferedImage(snapshot);
                         outputPanel.setPreferredSize(imageSize);
 
-                        setSize(new Dimension((int)imageSize.getWidth()+(controlPanel.getWidth()), (int)imageSize.getHeight()+(controlPanel.getHeight()*3)));
+                        double outputWindowWidth = 100.0;
+                        if(imageSize.getWidth()>controlPanel.getWidth()) outputWindowWidth = imageSize.getWidth();
+                        else outputWindowWidth = controlPanel.getWidth();
+                        setSize(new Dimension((int)outputWindowWidth, (int)imageSize.getHeight()+(controlPanel.getHeight()*3)));
                         
                         validate();
                         repaint();

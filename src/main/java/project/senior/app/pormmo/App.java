@@ -1,9 +1,7 @@
 package project.senior.app.pormmo;
 
-import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import java.io.File;
-import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 /**
@@ -20,7 +18,7 @@ public class App
       
     if (System.getProperty("os.name").startsWith("Windows")) 
     {         
-      if(!System.getenv("ProgramFiles(x86)").isEmpty())
+      if(System.getenv("ProgramFiles(x86)") != null)
       {
         String osArch = System.getenv("ProgramFiles(x86)");
         //::We now know that PF x86 exists and is not empty

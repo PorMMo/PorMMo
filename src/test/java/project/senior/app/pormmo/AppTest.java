@@ -30,7 +30,7 @@ public class AppTest extends TestCase {
      * Test of main method, of class App.
      */
     public void testMain() {
-        System.out.println("****************************** App Test <<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        assert(true);
+        System.out.println("Hello CSC 480");
+        assert(false);
     }
 }
