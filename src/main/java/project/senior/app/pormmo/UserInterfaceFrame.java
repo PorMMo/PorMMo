@@ -252,54 +252,17 @@ public class UserInterfaceFrame extends JFrame
 
   private class UserInterfaceFrameMenuListener extends MouseAdapter
   {
-
     @Override
     public void mouseReleased(MouseEvent e)
     {
 
-      if (vlcIFace == null)
-      {
-        JOptionPane.showMessageDialog(null, "Please choose a file via the File menu");
-        showFileSelect();
-      } else
-      {
-        JButton clickedButton = (JButton) e.getSource();
-
-        switch (clickedButton.getText().toLowerCase())
-        {
-          case "play":
-            vlcIFace.Play();
-            break;
-          case "stop":
-            vlcIFace.Stop();
-            break;
-          case "pause":
-            vlcIFace.Pause();
-            break;
-          case "snapshot":
-            BufferedImage snapshot;
-
-            vlcIFace.Snapshot();
-            snapshot = vlcIFace.LastSnapShot();
-            Dimension imageSize = new Dimension(snapshot.getWidth(), snapshot.getHeight());
-
-            outputPanel.DrawBufferedImage(snapshot);
-            outputPanel.setPreferredSize(imageSize);
-
-            double outputWindowWidth = 100.0;
-            if (imageSize.getWidth() > controlPanel.getWidth())
-            {
-              outputWindowWidth = imageSize.getWidth();
-            } else
-            {
-              outputWindowWidth = controlPanel.getWidth();
-            }
-            setSize(new Dimension((int) outputWindowWidth, (int) imageSize.getHeight() + (controlPanel.getHeight() * 3)));
-
-            validate();
-            repaint();
-            break;
-        }
+      switch (((JMenuItem)e.getSource()).getText().toLowerCase()){
+        case "open":
+          showFileSelect();
+          break;
+        case "exit":
+          System.exit(0);
+          break;
       }
     }
   }
