@@ -1,15 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package project.senior.app.pormmo;
 
 import junit.framework.TestCase;
 
-/**
- *
- * @author techmage
- */
 public class AppTest extends TestCase {
     
     public AppTest(String testName) {

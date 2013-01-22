@@ -58,16 +58,16 @@ public class UserInterfaceFrame extends JFrame
     this.addComponentListener(new FrameListener());
     me = this;
   }
-  
+
   private void showFrame()
   {
     pack();
     setVisible(true);
   }
-  
+
   private void initLayouts()
   {
-    controlLayout = new GridBagLayout();    
+    controlLayout = new GridBagLayout();
     controlGBC = new GridBagConstraints();
     controlGBC.fill = GridBagConstraints.HORIZONTAL;
 
@@ -78,7 +78,7 @@ public class UserInterfaceFrame extends JFrame
     sPane = new ScrollPane();
     sPane.add(outputPanel);
     sPane.setPreferredSize(this.getPreferredSize());
-    
+
     add(controlPanel, BorderLayout.NORTH);
     add(sPane, BorderLayout.CENTER);
   }
@@ -122,7 +122,7 @@ public class UserInterfaceFrame extends JFrame
     controlGBC.gridx = 1;
     controlGBC.gridy = 0;
     controlPanel.add(stopButton, controlGBC);
-    
+
     JButton fwdButton = new JButton("Forward");
     fwdButton.addMouseListener(new MediaControlsListener());
     controlGBC.gridx = 2;
@@ -134,13 +134,13 @@ public class UserInterfaceFrame extends JFrame
     controlGBC.gridx = 3;
     controlGBC.gridy = 0;
     controlPanel.add(rwdButton, controlGBC);
-    
+
     JButton pauseButton = new JButton("Pause");
     pauseButton.addMouseListener(new MediaControlsListener());
     controlGBC.gridx = 4;
     controlGBC.gridy = 0;
     controlPanel.add(pauseButton, controlGBC);
-    
+
     JButton snapshotButton = new JButton("Snapshot");
     snapshotButton.addMouseListener(new MediaControlsListener());
     controlGBC.gridx = 5;
@@ -179,7 +179,7 @@ public class UserInterfaceFrame extends JFrame
       try
       {
         vlcIFace = new VlcInterface(selectedInputFile);
-        
+
       } catch (java.lang.NoClassDefFoundError e)
       {
         System.out.println("Error: " + e.getMessage());
@@ -233,7 +233,7 @@ public class UserInterfaceFrame extends JFrame
             snapshot = vlcIFace.LastSnapShot();
 
             outputPanel.DrawBufferedImage(snapshot);
-            outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight()-controlPanel.getHeight()));
+            outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
             break;
         }
       }
@@ -253,51 +253,65 @@ public class UserInterfaceFrame extends JFrame
   private class UserInterfaceFrameMenuListener extends MouseAdapter
   {
 
-        @Override
-        public void mouseReleased(MouseEvent e)
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+
+      if (vlcIFace == null)
+      {
+        JOptionPane.showMessageDialog(null, "Please choose a file via the File menu");
+        showFileSelect();
+      } else
+      {
+        JButton clickedButton = (JButton) e.getSource();
+
+        switch (clickedButton.getText().toLowerCase())
         {
-            
-            if(vlcIFace==null) JOptionPane.showMessageDialog(null, "Please choose a file via the File menu");
-            else {
-                JButton clickedButton = (JButton)e.getSource();
+          case "play":
+            vlcIFace.Play();
+            break;
+          case "stop":
+            vlcIFace.Stop();
+            break;
+          case "pause":
+            vlcIFace.Pause();
+            break;
+          case "snapshot":
+            BufferedImage snapshot;
 
-                switch (clickedButton.getText().toLowerCase()){
-                    case "play":
-                        vlcIFace.Play();
-                        break;
-                    case "stop":
-                        vlcIFace.Stop();
-                        break;
-                    case "pause":
-                        vlcIFace.Pause();
-                        break;
-                    case "snapshot":
-                        BufferedImage snapshot;
-                        
-                        vlcIFace.Snapshot();
-                        snapshot = vlcIFace.LastSnapShot();
-                        Dimension imageSize = new Dimension(snapshot.getWidth(), snapshot.getHeight());
+            vlcIFace.Snapshot();
+            snapshot = vlcIFace.LastSnapShot();
+            Dimension imageSize = new Dimension(snapshot.getWidth(), snapshot.getHeight());
 
-                        outputPanel.DrawBufferedImage(snapshot);
-                        outputPanel.setPreferredSize(imageSize);
+            outputPanel.DrawBufferedImage(snapshot);
+            outputPanel.setPreferredSize(imageSize);
 
-                        double outputWindowWidth = 100.0;
-                        if(imageSize.getWidth()>controlPanel.getWidth()) outputWindowWidth = imageSize.getWidth();
-                        else outputWindowWidth = controlPanel.getWidth();
-                        setSize(new Dimension((int)outputWindowWidth, (int)imageSize.getHeight()+(controlPanel.getHeight()*3)));
-                        
-                        validate();
-                        repaint();
-                        break;
-                }
+            double outputWindowWidth = 100.0;
+            if (imageSize.getWidth() > controlPanel.getWidth())
+            {
+              outputWindowWidth = imageSize.getWidth();
+            } else
+            {
+              outputWindowWidth = controlPanel.getWidth();
             }
+            setSize(new Dimension((int) outputWindowWidth, (int) imageSize.getHeight() + (controlPanel.getHeight() * 3)));
+
+            validate();
+            repaint();
+            break;
         }
+      }
+    }
+  }
+
+  private class FrameListener implements ComponentListener
+  {
 
     @Override
     public void componentResized(ComponentEvent e)
     {
       controlPanel.setPreferredSize(new Dimension(me.getWidth(), controlPanel.getHeight()));
-      outputPanel.setPreferredSize(new Dimension(me.getWidth(), outputPanel.getHeight()-controlPanel.getHeight()));
+      outputPanel.setPreferredSize(new Dimension(me.getWidth(), outputPanel.getHeight() - controlPanel.getHeight()));
       me.validate();
       me.repaint();
     }
@@ -317,8 +331,7 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void componentHidden(ComponentEvent e)
     {
-      System.out.println("Comp Hid");    
+      System.out.println("Comp Hid");
     }
-    
   }
 }

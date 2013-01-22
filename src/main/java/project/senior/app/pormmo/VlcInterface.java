@@ -3,7 +3,6 @@ package project.senior.app.pormmo;
 import com.sun.jna.Native;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import javax.swing.JPanel;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
@@ -31,17 +30,6 @@ public class VlcInterface extends JPanel
         mPlayerFactory = new MediaPlayerFactory();        
         mPlayer = mPlayerFactory.newEmbeddedMediaPlayer();
             mPlayer.addMediaPlayerEventListener(new PlayerEventListener());
-
-        File dir = new File(".");
-            try
-        {
-            mPlayer.setSnapshotDirectory(dir.getCanonicalPath() + "/captures");
-        }
-        catch (IOException ex)
-        {
-            System.out.println("Error....");
-        }
-
     }
 
     public void Play()
@@ -64,6 +52,16 @@ public class VlcInterface extends JPanel
         bi = mPlayer.getSnapshot();
     }
     
+    public void Forward()
+    {
+      mPlayer.skip(1000);
+    }
+    
+    public void Rewind()
+    {
+      mPlayer.skip(-1000);
+    }
+
     public BufferedImage LastSnapShot(){        
         return bi;
     }
