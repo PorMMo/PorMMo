@@ -1,7 +1,6 @@
 package project.senior.app.pormmo;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,7 +11,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -38,6 +43,7 @@ public class UserInterfaceFrame extends JFrame
   private ScrollPane sPane;
   private JFrame me;
   private BufferedImage snapshot;
+  private String fileDirectory;
 
   public UserInterfaceFrame()
   {
@@ -81,6 +87,7 @@ public class UserInterfaceFrame extends JFrame
 
     add(controlPanel, BorderLayout.NORTH);
     add(sPane, BorderLayout.CENTER);
+    fileDirectory = "";
   }
 
   private void initMenu()
@@ -154,9 +161,69 @@ public class UserInterfaceFrame extends JFrame
     controlPanel.add(posSlider, controlGBC);
   }
 
+  /**
+   * Check and do settings. 
+   * 0 = Check for the Settings Directory.
+   * 
+   * 1 = Check for FileSelect directories and last location.
+   * ##~If there is no last one, it will create the file.
+   * 
+   * 2 = Save latest location for FileSelect
+   * 
+   * @param setting The setting you wish to check/do. 
+   */
+  private void doSettings(int setting) 
+  {
+    switch(setting)
+    {
+      case 0:
+        File SettingsDirectory = new File("/Settings/");
+        if (!SettingsDirectory.exists())
+          SettingsDirectory.mkdir();
+        break;
+      //------------------------------------------------------------------------
+      case 1:
+        File SavedDirectory = new File("/Settings/SD.pmo");
+        if(SavedDirectory.exists())
+        {
+          try
+          {
+            Scanner scan = new Scanner(SavedDirectory);
+            fileDirectory = scan.nextLine();
+            scan.close();
+          }
+          catch(Exception e)
+          {
+            //#DEBUG
+            System.out.println("Insufficient Access to file! setting = 1");
+          }
+        }//::End if(SavedDirectory)
+        break;
+      //------------------------------------------------------------------------
+      case 2:
+        try
+        {
+          BufferedWriter bw =
+                          new BufferedWriter(new FileWriter("/Settings/SD.pmo"));
+          bw.write(fileDirectory);
+          bw.close();
+        }
+        catch (Exception e)
+        {
+          //#DEBUG
+          System.out.println("Can't write to file! setting = 2");
+        }
+        break;
+    }   
+  }
+  
   private void showFileSelect()
   {
+    doSettings(0);
+    doSettings(1);
+    
     JFileChooser jFC = new JFileChooser();
+    jFC.setSelectedFile(new File(fileDirectory));
     jFC.setAcceptAllFileFilterUsed(false);
     jFC.setFileFilter(new ExtFileFilter(new String[]
             {
@@ -168,7 +235,9 @@ public class UserInterfaceFrame extends JFrame
             }));
 
     jFC.showDialog(this, "Open");
-    selectedInputFile = jFC.getSelectedFile();
+    selectedInputFile = jFC.getSelectedFile();   
+    fileDirectory = jFC.getSelectedFile().getPath();
+    doSettings(2);
     OpenSource();
   }
 
@@ -256,7 +325,8 @@ public class UserInterfaceFrame extends JFrame
     public void mouseReleased(MouseEvent e)
     {
 
-      switch (((JMenuItem)e.getSource()).getText().toLowerCase()){
+      switch (((JMenuItem)e.getSource()).getText().toLowerCase())
+      {
         case "open":
           showFileSelect();
           break;

@@ -15,7 +15,7 @@ public class App
   
   public static void main(String[] args) 
   {
-      
+  
     if (System.getProperty("os.name").startsWith("Windows")) 
     {         
       if(System.getenv("ProgramFiles(x86)") != null)
@@ -41,7 +41,7 @@ public class App
       //::for 64-bit machines.
       System.out.println(System.getenv("ProgramFiles") + vlcPath);
 
-      //NativeLibrary.addSearchPath("libvlc", osArch + vlcPath);
+      //NativeLibrary.addSearchPath("libvlc", System.getenv("ProgramFiles") + vlcPath);
       NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), 
                                        System.getenv("ProgramFiles") + vlcPath);
     }
