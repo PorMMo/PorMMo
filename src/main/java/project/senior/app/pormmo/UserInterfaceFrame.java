@@ -177,13 +177,13 @@ public class UserInterfaceFrame extends JFrame
     switch(setting)
     {
       case 0:
-        File SettingsDirectory = new File("/Settings/");
+        File SettingsDirectory = new File("Settings/");
         if (!SettingsDirectory.exists())
           SettingsDirectory.mkdir();
         break;
       //------------------------------------------------------------------------
       case 1:
-        File SavedDirectory = new File("/Settings/SD.pmo");
+        File SavedDirectory = new File("Settings/SD.pmo");
         if(SavedDirectory.exists())
         {
           try
@@ -204,7 +204,7 @@ public class UserInterfaceFrame extends JFrame
         try
         {
           BufferedWriter bw =
-                          new BufferedWriter(new FileWriter("/Settings/SD.pmo"));
+                          new BufferedWriter(new FileWriter("Settings/SD.pmo"));
           bw.write(fileDirectory);
           bw.close();
         }
