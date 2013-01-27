@@ -13,8 +13,8 @@ public class OutputPanel extends JPanel
 {
     private BufferedImage bi;
     
-    public OutputPanel(){
-        
+    public OutputPanel()
+    {    
     }
         
     public void DrawBufferedImage(BufferedImage bi)
