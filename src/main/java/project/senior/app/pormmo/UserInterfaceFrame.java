@@ -353,6 +353,8 @@ public class UserInterfaceFrame extends JFrame
     {
       controlPanel.setPreferredSize(new Dimension(me.getWidth(), controlPanel.getHeight()));
       outputPanel.setPreferredSize(new Dimension(me.getWidth(), outputPanel.getHeight() - controlPanel.getHeight()));
+//      me.validate();
+//      me.repaint();
     }
 
     @Override
