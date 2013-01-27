@@ -62,6 +62,10 @@ public class VlcInterface extends JPanel
       mPlayer.skip(-1000);
     }
 
+    public long getTime(){
+      return mPlayer.getTime();
+    }
+    
     public BufferedImage LastSnapShot(){        
         return bi;
     }
