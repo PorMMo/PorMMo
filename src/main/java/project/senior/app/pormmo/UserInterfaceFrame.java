@@ -469,6 +469,7 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void finished(MediaPlayer mp)
     {
+      mPlayer.stop();
     }
 
     @Override
