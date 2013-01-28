@@ -80,7 +80,7 @@ public class UserInterfaceFrame extends JFrame
   {
     Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
     mPlayerFactory = new MediaPlayerFactory();
-    mPlayer = mPlayerFactory.newEmbeddedMediaPlayer();
+    mPlayer = mPlayerFactory.newHeadlessMediaPlayer();
     mPlayer.addMediaPlayerEventListener(new PlayerEventListener());
   }
 
@@ -469,6 +469,7 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void finished(MediaPlayer mp)
     {
+      mPlayer.stop();
     }
 
     @Override
@@ -503,6 +504,7 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void snapshotTaken(MediaPlayer mp, String string)
     {
+      mPlayer.setMarqueeText("");
     }
 
     @Override
