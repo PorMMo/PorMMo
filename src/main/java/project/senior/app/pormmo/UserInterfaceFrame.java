@@ -28,6 +28,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
+import uk.co.caprica.vlcj.binding.internal.libvlc_state_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -41,7 +42,7 @@ public class UserInterfaceFrame extends JFrame
 
   private JPanel controlPanel;
   private OutputPanel outputPanel;
-  private File selectedInputFile;
+  private File selectedInputFile = null;
   private GridBagLayout controlLayout;
   private GridBagConstraints controlGBC;
   private ScrollPane sPane;
@@ -52,6 +53,7 @@ public class UserInterfaceFrame extends JFrame
   private MediaPlayer mPlayer;
   private JButton playPauseButton;
   private JSlider posSlider;
+  private boolean userSelectingLocation = false;
 
   public UserInterfaceFrame()
   {
@@ -79,7 +81,7 @@ public class UserInterfaceFrame extends JFrame
     Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
     mPlayerFactory = new MediaPlayerFactory();
     mPlayer = mPlayerFactory.newEmbeddedMediaPlayer();
-    mPlayer.addMediaPlayerEventListener(new PlayerEventListener());    
+    mPlayer.addMediaPlayerEventListener(new PlayerEventListener());
   }
 
   private void showFrame()
@@ -136,35 +138,35 @@ public class UserInterfaceFrame extends JFrame
     controlPanel.setLayout(controlLayout);
 
     playPauseButton = new JButton("Play/Pause");
-    playPauseButton.addMouseListener(new MediaControlsListener());
+    playPauseButton.addMouseListener(new MediaControlsButtonListener());
     playPauseButton.setName("playpause");
     controlGBC.gridx = 0;
     controlGBC.gridy = 0;
     controlPanel.add(playPauseButton, controlGBC);
 
     JButton stopButton = new JButton("Stop");
-    stopButton.addMouseListener(new MediaControlsListener());
+    stopButton.addMouseListener(new MediaControlsButtonListener());
     stopButton.setName("stop");
     controlGBC.gridx = 1;
     controlGBC.gridy = 0;
     controlPanel.add(stopButton, controlGBC);
 
     JButton fwdButton = new JButton("Forward");
-    fwdButton.addMouseListener(new MediaControlsListener());
+    fwdButton.addMouseListener(new MediaControlsButtonListener());
     fwdButton.setName("forward");
-    controlGBC.gridx = 2;
+    controlGBC.gridx = 3;
     controlGBC.gridy = 0;
     controlPanel.add(fwdButton, controlGBC);
 
     JButton rwdButton = new JButton("Rewind");
-    rwdButton.addMouseListener(new MediaControlsListener());
+    rwdButton.addMouseListener(new MediaControlsButtonListener());
     rwdButton.setName("rewind");
-    controlGBC.gridx = 3;
+    controlGBC.gridx = 2;
     controlGBC.gridy = 0;
     controlPanel.add(rwdButton, controlGBC);
 
     JButton snapshotButton = new JButton("Snapshot");
-    snapshotButton.addMouseListener(new MediaControlsListener());
+    snapshotButton.addMouseListener(new MediaControlsButtonListener());
     snapshotButton.setName("snapshot");
     controlGBC.gridx = 4;
     controlGBC.gridy = 0;
@@ -172,7 +174,9 @@ public class UserInterfaceFrame extends JFrame
 
     posSlider = new JSlider();
     posSlider.setName("pslider");
-    posSlider.addChangeListener(new MediaControlsListener());
+    MediaControlsSliderListener mcl = new MediaControlsSliderListener();
+    posSlider.addChangeListener(mcl);
+    posSlider.addMouseListener(mcl);
     posSlider.setMaximum(100);
     posSlider.setMinimum(0);
     controlGBC.gridx = 0;
@@ -275,24 +279,76 @@ public class UserInterfaceFrame extends JFrame
     }
   }
 
-  private class MediaControlsListener extends MouseAdapter implements ChangeListener
+  private class MediaControlsSliderListener extends MouseAdapter implements ChangeListener
   {
+
+    JSlider sliderOfInteraction;
+
+    @Override
+    public void stateChanged(ChangeEvent e)
+    {
+      if (userSelectingLocation)
+      {
+        mPlayer.setPosition((posSlider.getValue()) * .01f);
+      }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+
+      sliderOfInteraction = (JSlider) e.getSource();
+
+      switch (sliderOfInteraction.getName().toLowerCase())
+      {
+        case "pslider":
+          userSelectingLocation = true;
+          break;
+      }
+    }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
+      switch (sliderOfInteraction.getName().toLowerCase())
+      {
+        case "pslider":
+          userSelectingLocation = false;
+          break;
+      }
+    }
+  }
 
-      if (!mPlayer.isPlayable())
+  private class MediaControlsButtonListener extends MouseAdapter
+  {
+
+    JButton buttonOfInteraction;
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+      if (selectedInputFile == null)
       {
         JOptionPane.showMessageDialog(null, "Please choose a file via the File menu");
       } else
       {
-        JButton clickedButton = (JButton) e.getSource();
 
-        switch (clickedButton.getName().toLowerCase())
+        buttonOfInteraction = (JButton) e.getSource();
+
+        switch (buttonOfInteraction.getName().toLowerCase())
         {
           case "playpause":
-            mPlayer.pause();
+            if (mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Stopped)
+            {
+              mPlayer.playMedia(selectedInputFile.getAbsolutePath());
+            }
+
+            if ((mPlayer.canPause() && mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Playing)
+                    || mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Paused)
+            {
+              mPlayer.pause();
+            }
+
             break;
           case "forward":
             mPlayer.skip(1000);
@@ -310,18 +366,6 @@ public class UserInterfaceFrame extends JFrame
             outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
             break;
         }
-      }
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e)
-    {
-      if (!mPlayer.isPlayable())
-      {
-        JOptionPane.showMessageDialog(null, "Please choose a file via the File menu");
-      } else
-      {
-        System.out.println("currentTime is: " + mPlayer.getTime());
       }
     }
   }
@@ -409,6 +453,7 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void stopped(MediaPlayer mp)
     {
+      playPauseButton.setText("Play");
     }
 
     @Override
@@ -434,7 +479,10 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void positionChanged(MediaPlayer mp, float f)
     {
-      posSlider.setValue((int)(mPlayer.getPosition()*100));
+      if (!userSelectingLocation)
+      {
+        posSlider.setValue((int) (mPlayer.getPosition() * 100));
+      }
     }
 
     @Override
