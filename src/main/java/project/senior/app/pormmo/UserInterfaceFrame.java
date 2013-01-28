@@ -459,11 +459,13 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void forward(MediaPlayer mp)
     {
+        posSlider.setValue((int) (mPlayer.getPosition() * 100));
     }
 
     @Override
     public void backward(MediaPlayer mp)
     {
+        posSlider.setValue((int) (mPlayer.getPosition() * 100));
     }
 
     @Override
