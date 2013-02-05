@@ -11,6 +11,11 @@ import javax.imageio.ImageIO;
  */
 public class GSR
 {
+  public final float GREEN = 0.33f;
+  public final float BLUE  = 0.66f;
+  //Possible add more colours?
+  
+  
   /**
    * This method is used to remove the green screen.
    * 
@@ -32,16 +37,53 @@ public class GSR
         c.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsv);
         
         
-        if(hsv[0] < 0.3982f && hsv[0] > 0.1614f)
+        if(hsv[0] < 0.38f && hsv[0] > 0.22f)
           picture.setRGB(i, j, Color.TRANSLUCENT);    
-      }//:End for(i,j)
-    
-    //:at this point I would go over the image again and check the OUTSKIRTS
-    //:~for pixels that are vastly different from the original
+      }//:End for(i,j)   
     
     return picture;
   }//:End RemoveGreen
 
+  /**
+   * Test method to remove green screen.
+   * 
+   * @param before The image you want to remove green from
+   * @param Tolerance The amount of tolerance from a colour you wish to give it.
+   * @param Target the target color to remove GSR.GREEN for green. Or a value 0-1
+   * @return 
+   */
+  public BufferedImage RemoveGreen_2(BufferedImage before, float Tolerance, float Target)
+  {
+    BufferedImage picture = before.getSubimage(0, 0, before.getWidth(), 
+                                                     before.getHeight());
+    
+    Color c;
+    float[] hsv = {0, 0, 0};
+    float difference, trans;
+    float target = Target;
+    float tolerance = Tolerance;
+    
+    for(int i = 0; i < picture.getWidth(); i++)
+      for(int j = 0; j < picture.getHeight(); j++)
+      {
+        c = new Color(picture.getRGB(i,j));
+        c.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsv);
+        
+        difference = Math.abs(hsv[0] - target);
+        trans = (difference / tolerance);
+        
+        trans = Math.min (trans, 1.0f);
+        
+        if(trans < 0.1f)
+        {
+          picture.setRGB(i, j, Color.TRANSLUCENT);
+        }
+      }
+    
+    return picture;
+  }//:End RemoveGreen
+  
+  
   /**
    * Sets BufferedWrapper.img to the image at the path.
    * 

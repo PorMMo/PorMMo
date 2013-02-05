@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
@@ -35,14 +34,19 @@ public class SettingsDialog extends JDialog
 
   private void initDialog()
   {
+    //:##############################################################
+    //:##       He said try to do the whole docking thing          ##
+    //:##        So I commented the output area here out           ##
+    //:##############################################################
+    
     me = this;
     bl = new BorderLayout();
     setLayout(bl);
     addComponentListener(new SizeChangeListener());
-    biOut = imageCopy(bi);
+    //biOut = imageCopy(bi);
     
     initControls();
-    initOutputPanel();
+    //initOutputPanel();
 
     setPreferredSize(new Dimension(bi.getWidth() + (int) controlPanel.getMinimumSize().getWidth(), bi.getHeight()));
     System.out.println(controlPanel.getWidth());
@@ -104,8 +108,10 @@ public class SettingsDialog extends JDialog
     gBC.gridy = 3;
     saturationSlider = new JSlider();
     saturationSlider.setName("saturation");
-    saturationSlider.setMinimum(0);
+    saturationSlider.setMinimum(-1000);
     saturationSlider.setMaximum(1000);
+    saturationSlider.setSnapToTicks(true);
+    saturationSlider.setMajorTickSpacing(100);
     saturationSlider.setValue(0);
     saturationSlider.addChangeListener(new SliderListener());
     controlPanel.add(saturationSlider, gBC);
@@ -191,7 +197,34 @@ public class SettingsDialog extends JDialog
                       ));
             }
           }
-          break;
+          break;//:End brightness
+          
+        case "saturation":
+          for (int x = 0; x < bi.getWidth(); x++)
+          {
+            for (int y = 0; y < bi.getHeight(); y++)
+            {
+              currentSliderValue = sliderOfInteraction.getValue();
+              newColor = new Color(bi.getRGB(x, y));
+              Color.RGBtoHSB(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), hsbvals);
+              
+              saturation = currentSliderValue * .001f;
+              if(saturation < -.9f) saturation = (-.9f);
+              if(saturation > 1f)   saturation = 1f;
+              
+              biOut.setRGB(x, y, 
+                            Color.HSBtoRGB
+                            (
+                              hsbvals[0], 
+                             (hsbvals[1] + saturation < 0) ? 
+                               0 : (hsbvals[1] + (saturation) > 1.0f) ? 
+                                 1.0f :  hsbvals[1] + saturation, 
+                              hsbvals[2]
+                            )
+                          );
+            }
+          }
+          break;//:End saturation
       }
       oPanel.repaint();
     }

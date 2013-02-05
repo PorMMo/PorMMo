@@ -60,6 +60,8 @@ public class UserInterfaceFrame extends JFrame
   private MediaControlsSliderListener mcl;
   private JCheckBox jBX;
   private GSR gSR;
+  private int current;
+  private BufferedWrapper BW;
 
   public UserInterfaceFrame()
   {
@@ -81,6 +83,7 @@ public class UserInterfaceFrame extends JFrame
     this.addComponentListener(new FrameListener());
     me = this;
     gSR = new GSR();
+    current = 1;
   }
 
   private void initPlayer()
@@ -332,6 +335,25 @@ public class UserInterfaceFrame extends JFrame
       outputPanel.DrawBufferedImage(displayShot);
       outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
     }
+//    if(snapshot == null)
+//    {
+//      File ss = new File("Temp/temp" + current + ".jpg");
+//      //ss.deleteOnExit();
+//      mPlayer.saveSnapshot(ss);
+//      
+//      
+//      gSR.GetImageFromFile("Temp/temp" + current++ + ".jpg", BW);
+//      snapshot = BW.Clone();
+//    }
+//    
+//    displayShot = snapshot;
+//    if (jBX.isSelected())
+//    {
+//      displayShot = gSR.RemoveGreen(imageCopy(displayShot));
+//    }
+//
+//    outputPanel.DrawBufferedImage(displayShot);
+//    outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
   }
 
   private class MediaControlsSliderListener extends MouseAdapter implements ChangeListener
