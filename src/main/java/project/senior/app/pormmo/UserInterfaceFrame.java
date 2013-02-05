@@ -10,14 +10,17 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -47,13 +50,16 @@ public class UserInterfaceFrame extends JFrame
   private GridBagConstraints controlGBC;
   private ScrollPane sPane;
   private JFrame me;
-  private BufferedImage snapshot;
+  private BufferedImage snapshot, displayShot;
   private String fileDirectory;
   private MediaPlayerFactory mPlayerFactory;
   private MediaPlayer mPlayer;
   private JButton playPauseButton;
   private JSlider posSlider;
   private boolean userSelectingLocation = false;
+  private MediaControlsSliderListener mcl;
+  private JCheckBox jBX;
+  private GSR gSR;
 
   public UserInterfaceFrame()
   {
@@ -69,11 +75,12 @@ public class UserInterfaceFrame extends JFrame
 
   private void initFrame()
   {
-    setPreferredSize(new Dimension(500, 500));
+    setPreferredSize(new Dimension(640, 500));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     this.addComponentListener(new FrameListener());
     me = this;
+    gSR = new GSR();
   }
 
   private void initPlayer()
@@ -172,17 +179,49 @@ public class UserInterfaceFrame extends JFrame
     controlGBC.gridy = 0;
     controlPanel.add(snapshotButton, controlGBC);
 
-    posSlider = new JSlider();
-    posSlider.setName("pslider");
-    MediaControlsSliderListener mcl = new MediaControlsSliderListener();
-    posSlider.addChangeListener(mcl);
-    posSlider.addMouseListener(mcl);
-    posSlider.setMaximum(100);
-    posSlider.setMinimum(0);
+    JButton saveButton = new JButton("Save");
+    saveButton.addMouseListener(new MediaControlsButtonListener());
+    saveButton.setName("save");
+    controlGBC.gridx = 5;
+    controlGBC.gridy = 0;
+    controlPanel.add(saveButton, controlGBC);
+
+    JButton settingsButton = new JButton("Settings");
+    settingsButton.addMouseListener(new MediaControlsButtonListener());
+    settingsButton.setName("settings");
+    controlGBC.gridx = 6;
+    controlGBC.gridy = 0;
+    controlPanel.add(settingsButton, controlGBC);
+
+    jBX = new JCheckBox();
+    jBX.setSelected(true);
+    jBX.addMouseListener(new MediaControlsCheckBoxListener());
+    jBX.setName("greenscreencheckbox");
     controlGBC.gridx = 0;
     controlGBC.gridy = 1;
-    controlGBC.gridwidth = 6;
-    controlPanel.add(posSlider, controlGBC);
+    controlPanel.add(jBX, controlGBC);
+
+    JLabel greenScreenLabel = new JLabel("Green Screen");
+    controlGBC.gridx = 1;
+    controlGBC.gridy = 1;
+    controlPanel.add(greenScreenLabel, controlGBC);
+
+  }
+
+  public BufferedImage imageCopy(BufferedImage givenImage)
+  {
+    int iWidth = givenImage.getWidth(), iHeight = givenImage.getHeight();
+    BufferedImage newImage = new BufferedImage(iWidth, iHeight, givenImage.getType());
+
+    for (int x = 0; x < iWidth; x++)
+    {
+      for (int y = 0; y < iHeight; y++)
+      {
+        newImage.setRGB(x, y, givenImage.getRGB(x, y));
+      }
+    }
+
+    return newImage;
   }
 
   /**
@@ -279,6 +318,22 @@ public class UserInterfaceFrame extends JFrame
     }
   }
 
+  private void processSnapshot()
+  {
+    if (snapshot != null)
+    {
+      displayShot = snapshot;
+
+      if (jBX.isSelected())
+      {
+        displayShot = gSR.RemoveGreen(imageCopy(displayShot));
+      }
+
+      outputPanel.DrawBufferedImage(displayShot);
+      outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
+    }
+  }
+
   private class MediaControlsSliderListener extends MouseAdapter implements ChangeListener
   {
 
@@ -316,6 +371,16 @@ public class UserInterfaceFrame extends JFrame
           userSelectingLocation = false;
           break;
       }
+    }
+  }
+
+  private class MediaControlsCheckBoxListener extends MouseAdapter
+  {
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+      processSnapshot();
     }
   }
 
@@ -361,9 +426,16 @@ public class UserInterfaceFrame extends JFrame
             break;
           case "snapshot":
             snapshot = mPlayer.getSnapshot();
-
-            outputPanel.DrawBufferedImage(snapshot);
-            outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
+            processSnapshot();
+            break;
+          case "settings":
+            if (displayShot != null)
+            {
+              SettingsDialog sD = new SettingsDialog(displayShot);
+            } else
+            {
+              JOptionPane.showMessageDialog(null, "Please take a snapshot first.");
+            }
             break;
         }
       }
@@ -397,8 +469,8 @@ public class UserInterfaceFrame extends JFrame
     {
       controlPanel.setPreferredSize(new Dimension(me.getWidth(), controlPanel.getHeight()));
       outputPanel.setPreferredSize(new Dimension(me.getWidth(), outputPanel.getHeight() - controlPanel.getHeight()));
-//      me.validate();
-//      me.repaint();
+      me.validate();
+      me.repaint();
     }
 
     @Override
@@ -459,13 +531,13 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void forward(MediaPlayer mp)
     {
-        posSlider.setValue((int) (mPlayer.getPosition() * 100));
+      posSlider.setValue((int) (mPlayer.getPosition() * 100));
     }
 
     @Override
     public void backward(MediaPlayer mp)
     {
-        posSlider.setValue((int) (mPlayer.getPosition() * 100));
+      posSlider.setValue((int) (mPlayer.getPosition() * 100));
     }
 
     @Override
@@ -506,7 +578,6 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void snapshotTaken(MediaPlayer mp, String string)
     {
-      mPlayer.setMarqueeText("");
     }
 
     @Override
