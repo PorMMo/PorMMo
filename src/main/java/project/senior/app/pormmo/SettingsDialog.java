@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
@@ -178,13 +179,15 @@ public class SettingsDialog extends JDialog
               Color.RGBtoHSB(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), hsbvals);
               
               brightness = currentSliderValue*.001f;
-              if(brightness<0) brightness=0;
-              if(brightness>.99f) brightness=.99f;
+              if(brightness<-.9f) brightness=(-.9f);
+              if(brightness>1f) brightness=1f;
               
               biOut.setRGB(x, y, Color.HSBtoRGB(
                       hsbvals[0]
                       , hsbvals[1]
-                      , hsbvals[2]-(brightness)
+                      , (hsbvals[2]+(brightness) < 0) ? 0 : 
+                         (hsbvals[2] + (brightness) > 1.0f) ? 1.0f : 
+                           hsbvals[2] + brightness
                       ));
             }
           }
