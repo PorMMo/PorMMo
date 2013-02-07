@@ -323,6 +323,8 @@ public class UserInterfaceFrame extends JFrame
 
   private void processSnapshot()
   {
+    snapshot = mPlayer.getSnapshot();
+
     if (snapshot != null)
     {
       displayShot = snapshot;
@@ -447,7 +449,6 @@ public class UserInterfaceFrame extends JFrame
             mPlayer.stop();
             break;
           case "snapshot":
-            snapshot = mPlayer.getSnapshot();
             processSnapshot();
             break;
           case "settings":
