@@ -12,7 +12,7 @@ public class BufferedWrapper
    * Pass by Reference.
    */
   public BufferedImage img;
-  
+  public int frameNum;
   /**
    * Clone the img.
    * @return A clone of the BufferedWrappers Image
