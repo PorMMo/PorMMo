@@ -43,6 +43,7 @@ import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 public class UserInterfaceFrame extends JFrame
 {
 
+  private ScrollPane left;
   private JPanel controlPanel;
   private OutputPanel outputPanel;
   private File selectedInputFile = null;
@@ -110,12 +111,37 @@ public class UserInterfaceFrame extends JFrame
 
   private void initDisplay()
   {
+    //:Just some test panels.
+    JPanel[] tools = new JPanel[4];
+    JPanel test = new JPanel(); 
+    test.setPreferredSize(new Dimension(100, 400));
+    test.add(new JLabel("test"));
+    tools[0] = test;
+    
+    test = new JPanel();
+    test.add(new JLabel("test2"));
+    test.setPreferredSize(new Dimension(100, 400));
+    tools[1] = test;
+    
+    test = new JPanel();
+    test.add(new JLabel("test3"));
+    test.setPreferredSize(new Dimension(100, 400));
+    tools[2] = test;
+    
+    test = new JPanel();
+    test.add(new JLabel("test4"));
+    test.setPreferredSize(new Dimension(100, 400));
+    tools[3] = test;
+
+    left = new ToolsPanel(tools);
+    
     sPane = new ScrollPane();
     sPane.add(outputPanel);
     sPane.setPreferredSize(this.getPreferredSize());
 
     add(controlPanel, BorderLayout.NORTH);
     add(sPane, BorderLayout.CENTER);
+    add(left, BorderLayout.WEST);
     fileDirectory = "";
   }
 
