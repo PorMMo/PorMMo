@@ -15,7 +15,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class SettingsDialog extends JDialog
+public class SettingsDock extends JDialog
 {
 
   private BufferedImage bi, biOut;
@@ -25,7 +25,7 @@ public class SettingsDialog extends JDialog
   private JDialog me;
   JSlider saturationSlider, hueSlider, brightnessSlider;
 
-  public SettingsDialog(BufferedImage bi)
+  public SettingsDock(BufferedImage bi)
   {
     this.setModal(true);
     this.bi = bi;

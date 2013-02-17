@@ -480,7 +480,7 @@ public class UserInterfaceFrame extends JFrame
           case "settings":
             if (displayShot != null)
             {
-              SettingsDialog sD = new SettingsDialog(displayShot);
+              SettingsDock sD = new SettingsDock(displayShot);
             } else
             {
               JOptionPane.showMessageDialog(null, "Please take a snapshot first.");
