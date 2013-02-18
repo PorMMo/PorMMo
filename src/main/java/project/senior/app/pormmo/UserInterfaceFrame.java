@@ -45,6 +45,7 @@ public class UserInterfaceFrame extends JFrame
 
   private ScrollPane left;
   private JPanel controlPanel;
+  private HSBPanel hsbPanel;
   private OutputPanel outputPanel;
   private File selectedInputFile = null;
   private GridBagLayout controlLayout;
@@ -106,33 +107,16 @@ public class UserInterfaceFrame extends JFrame
     controlLayout = new GridBagLayout();
     controlGBC = new GridBagConstraints();
     controlGBC.fill = GridBagConstraints.HORIZONTAL;
-
   }
 
   private void initDisplay()
   {
     //:Just some test panels.
-    JPanel[] tools = new JPanel[4];
-    JPanel test = new JPanel(); 
-    test.setPreferredSize(new Dimension(100, 400));
-    test.add(new JLabel("test"));
-    tools[0] = test;
-    
-    test = new JPanel();
-    test.add(new JLabel("test2"));
-    test.setPreferredSize(new Dimension(100, 400));
-    tools[1] = test;
-    
-    test = new JPanel();
-    test.add(new JLabel("test3"));
-    test.setPreferredSize(new Dimension(100, 400));
-    tools[2] = test;
-    
-    test = new JPanel();
-    test.add(new JLabel("test4"));
-    test.setPreferredSize(new Dimension(100, 400));
-    tools[3] = test;
-
+    JPanel[] tools = new JPanel[1];
+    hsbPanel = new HSBPanel(null, outputPanel); 
+    hsbPanel.setPreferredSize(new Dimension(100, 200));
+    tools[0] = hsbPanel;
+        
     left = new ToolsPanel(tools);
     
     sPane = new ScrollPane();
@@ -169,7 +153,7 @@ public class UserInterfaceFrame extends JFrame
 
   private void initControlPanel()
   {
-
+//Needs rewrite into a smarter generation approach
     controlPanel = new JPanel();
     controlPanel.setLayout(controlLayout);
 
@@ -322,7 +306,7 @@ public class UserInterfaceFrame extends JFrame
             }));
     jFC.setFileFilter(new ExtFileFilter(new String[]
             {
-              ".mp4", ".mpg", ".avi", ".wmv"
+              ".mp4", ".mpg", ".avi"
             }));
 
     jFC.showDialog(this, "Open");
@@ -349,8 +333,6 @@ public class UserInterfaceFrame extends JFrame
 
   private void processSnapshot()
   {
-    snapshot = mPlayer.getSnapshot();
-
     if (snapshot != null)
     {
       displayShot = snapshot;
@@ -362,6 +344,7 @@ public class UserInterfaceFrame extends JFrame
 
       outputPanel.DrawBufferedImage(displayShot);
       outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
+      hsbPanel.setImage(displayShot);
     }
 //    if(snapshot == null)
 //    {
@@ -475,12 +458,13 @@ public class UserInterfaceFrame extends JFrame
             mPlayer.stop();
             break;
           case "snapshot":
+            snapshot = mPlayer.getSnapshot();
             processSnapshot();
             break;
           case "settings":
             if (displayShot != null)
             {
-              SettingsDialog sD = new SettingsDialog(displayShot);
+              HSBPanel sD = new HSBPanel(displayShot, outputPanel);
             } else
             {
               JOptionPane.showMessageDialog(null, "Please take a snapshot first.");
@@ -525,19 +509,19 @@ public class UserInterfaceFrame extends JFrame
     @Override
     public void componentMoved(ComponentEvent e)
     {
-//      System.out.println("Comp Mvd");
+
     }
 
     @Override
     public void componentShown(ComponentEvent e)
     {
-//      System.out.println("Comp Shwn");
+
     }
 
     @Override
     public void componentHidden(ComponentEvent e)
     {
-//      System.out.println("Comp Hid");
+
     }
   }
 
