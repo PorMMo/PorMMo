@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package project.senior.app.pormmo;
 
 import java.awt.*;
 import javax.swing.*;
 
 /**
- *
  * @author Seobi-TAZS_C
  */
 public class ToolsPanel extends ScrollPane
