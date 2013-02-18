@@ -13,6 +13,21 @@ public class BufferedWrapper
    */
   public BufferedImage img;
   public int frameNum;
+  
+  /**
+   * Constructor
+   * @param img A BufferedImage
+   * @param frameNum An int which represents the order this BufferedWrapper is in a sequence of frames
+   */
+  public BufferedWrapper(BufferedImage img, int frameNum){
+      this.img = img;
+      this.frameNum = frameNum;
+  }
+  
+  public BufferedWrapper(){
+      
+  }
+  
   /**
    * Clone the img.
    * @return A clone of the BufferedWrappers Image
