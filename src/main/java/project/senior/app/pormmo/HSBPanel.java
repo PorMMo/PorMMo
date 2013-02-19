@@ -140,7 +140,7 @@ public class HSBPanel extends JPanel
         resetButton.setPreferredSize(new Dimension(75, 40));
         controlPanel.add(resetButton, gBC);
 
-        add(controlPanel, BorderLayout.WEST);
+        add(controlPanel);
     }
 
     public BufferedImage imageCopy(BufferedImage givenImage) 

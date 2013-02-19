@@ -42,7 +42,7 @@ import uk.co.caprica.vlcj.runtime.RuntimeUtil;
  */
 public class UserInterfaceFrame extends JFrame
 {
-
+  public float TOLERANCE;
   private ScrollPane left;
   private JPanel controlPanel;
   private HSBPanel hsbPanel;
@@ -67,6 +67,7 @@ public class UserInterfaceFrame extends JFrame
 
   public UserInterfaceFrame()
   {
+    TOLERANCE = 0.5f;
     initFrame();
     initLayouts();
     initMenu();
@@ -113,10 +114,14 @@ public class UserInterfaceFrame extends JFrame
   private void initDisplay()
   {
     //:Just some test panels.
-    JPanel[] tools = new JPanel[1];
+    JPanel[] tools = new JPanel[2];
     hsbPanel = new HSBPanel(null, outputPanel); 
     hsbPanel.setPreferredSize(new Dimension(100, 200));
+    
     tools[0] = hsbPanel;
+    TolerancePanel tp = new TolerancePanel(this);
+    tp.setPreferredSize(new Dimension(100,100));
+    tools[1] = tp;
         
     left = new ToolsPanel(tools);
     
@@ -332,7 +337,7 @@ public class UserInterfaceFrame extends JFrame
     }
   }
 
-  private void processSnapshot()
+  public void processSnapshot()
   {
     if (snapshot != null)
     {
@@ -340,9 +345,7 @@ public class UserInterfaceFrame extends JFrame
 
       if (jBX.isSelected())
       {
-        //:----- Tolerance = 0.5f. 
-        //:--------Add tool to alter tolerance.
-        displayShot = gSR.RemoveGreen_2(imageCopy(displayShot), 0.5f, gSR.GREEN);
+        displayShot = gSR.RemoveGreen_2(imageCopy(displayShot), TOLERANCE, gSR.GREEN);
       }
 
       outputPanel.DrawBufferedImage(displayShot);

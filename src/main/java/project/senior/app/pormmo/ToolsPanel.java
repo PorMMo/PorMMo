@@ -21,7 +21,7 @@ public class ToolsPanel extends ScrollPane
     {
       Box temp = Box.createVerticalBox();
       temp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-      temp.add(tools[0]); 
+      temp.add(tools[i]); 
       main.add(temp); 
     }
   }
