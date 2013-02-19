@@ -10,7 +10,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -81,7 +80,7 @@ public class UserInterfaceFrame extends JFrame
   private void initFrame()
   {
     setTitle("PorMMo");
-    setPreferredSize(new Dimension(640, 500));
+    setPreferredSize(new Dimension(800, 600));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     this.addComponentListener(new FrameListener());
@@ -205,13 +204,6 @@ public class UserInterfaceFrame extends JFrame
     controlGBC.gridy = 0;
     controlPanel.add(saveButton, controlGBC);
 
-    JButton settingsButton = new JButton("Settings");
-    settingsButton.addMouseListener(new MediaControlsButtonListener());
-    settingsButton.setName("settings");
-    controlGBC.gridx = 6;
-    controlGBC.gridy = 0;
-    controlPanel.add(settingsButton, controlGBC);
-
     jBX = new JCheckBox();
     jBX.setSelected(true);
     jBX.addMouseListener(new MediaControlsCheckBoxListener());
@@ -225,6 +217,21 @@ public class UserInterfaceFrame extends JFrame
     controlGBC.gridy = 1;
     controlPanel.add(greenScreenLabel, controlGBC);
 
+    JLabel spaceHolder = new JLabel(" ");
+    controlGBC.gridx = 2;
+    controlGBC.gridy = 1;
+    controlPanel.add(spaceHolder, controlGBC);
+
+    posSlider = new JSlider();
+    posSlider.setName("pslider");
+    MediaControlsSliderListener mCSL = new MediaControlsSliderListener();
+    posSlider.addChangeListener(mCSL);    
+    posSlider.addMouseListener(mCSL);
+    controlGBC.gridx = 3;
+    controlGBC.gridy = 1;
+    controlGBC.gridwidth = 4;
+    controlPanel.add(posSlider, controlGBC);
+    
   }
 
   public BufferedImage imageCopy(BufferedImage givenImage)
