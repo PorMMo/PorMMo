@@ -119,7 +119,7 @@ public class UserInterfaceFrame extends JFrame
     hsbPanel.setPreferredSize(new Dimension(100, 200));
     
     tools[0] = hsbPanel;
-    TolerancePanel tp = new TolerancePanel(this);
+    TolerancePanel tp = new TolerancePanel(outputPanel);
     tp.setPreferredSize(new Dimension(100,100));
     tools[1] = tp;
         

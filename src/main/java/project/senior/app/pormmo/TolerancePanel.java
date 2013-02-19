@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -17,11 +18,14 @@ import javax.swing.event.ChangeListener;
 public class TolerancePanel extends JPanel
 {
   private JSlider tolerance;
-  private UserInterfaceFrame main;
+  private GSR gsr;
+  private OutputPanel main;
+  private float T;
   
-  public TolerancePanel(UserInterfaceFrame main)
+  public TolerancePanel(OutputPanel op)
   {
-    this.main = main;
+    main = op;
+    gsr = new GSR();
     initPanel();
     initControls();
   }
@@ -59,7 +63,7 @@ public class TolerancePanel extends JPanel
       @Override
       public void stateChanged(ChangeEvent e)
       {
-        main.TOLERANCE = (1.0f * tolerance.getValue()) / 100.0f;
+        T = (1.0f * tolerance.getValue()) / 100.0f;
       }
     });
     inner.add(tolerance, gbc);
@@ -77,7 +81,10 @@ public class TolerancePanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        main.processSnapshot();
+        if(main.IsReady())
+        {
+          main.ReDrawBufferedImage(T, gsr.GREEN);
+        }
       }
     });
     inner.add(apply, gbc);
