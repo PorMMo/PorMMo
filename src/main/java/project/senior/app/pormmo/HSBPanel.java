@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -15,39 +17,40 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class HSBPanel extends JPanel {
+public class HSBPanel extends JPanel 
+{
 
     private BufferedImage bi, bi2;
     private BorderLayout bl;
     private JPanel controlPanel;
     private OutputPanel oPanel;
+    private JButton applyBtn;
     private JPanel me;
     private JSlider saturationSlider, hueSlider, brightnessSlider;
 
-    public HSBPanel(BufferedImage bi, OutputPanel oPanel) {
+    public HSBPanel(BufferedImage bi, OutputPanel oPanel) 
+    {
         this.bi = bi;
         this.oPanel = oPanel;
 
-        if (bi != null) {
-            initPanel();
-        }
         initPanel();
     }
 
-    public void setImage(BufferedImage bi) {
+    public void setImage(BufferedImage bi) 
+    {
         this.bi = bi;
-        initPanel();
     }
 
-    private void initPanel() {
+    private void initPanel() 
+    {
         me = this;
         bl = new BorderLayout();
         setLayout(bl);
-
         initControls();
     }
 
-    private void initControls() {
+    private void initControls() 
+    {
         GridBagLayout gBL = new GridBagLayout();
         GridBagConstraints gBC = new GridBagConstraints();
 
@@ -109,19 +112,46 @@ public class HSBPanel extends JPanel {
         
         gBC.gridx = 0;
         gBC.gridy = 7;
+        applyBtn = new JButton("Apply");
+        applyBtn.setName("apply");
+        applyBtn.setPreferredSize(new Dimension(75, 40));
+        applyBtn.addActionListener(new ActionListener()
+            {
+              @Override
+              public void actionPerformed(ActionEvent e)
+              {
+                if(bi2.equals(null)) return;
+                
+                bi = BufferedWrapper.CloneImg(bi2);
+                saturationSlider.setValue(0);
+                saturationSlider.repaint();
+                brightnessSlider.setValue(0);
+                brightnessSlider.repaint();
+                hueSlider.setValue(0);     
+                hueSlider.repaint();
+              }
+            });
+        controlPanel.add(applyBtn, gBC);
+        
+        gBC.gridx = 0;
+        gBC.gridy = 8;
         JButton resetButton = new JButton("Reset");
         resetButton.addMouseListener(new cButtonListener());
+        resetButton.setPreferredSize(new Dimension(75, 40));
         controlPanel.add(resetButton, gBC);
 
         add(controlPanel, BorderLayout.WEST);
     }
 
-    public BufferedImage imageCopy(BufferedImage givenImage) {
+    public BufferedImage imageCopy(BufferedImage givenImage) 
+    {
         int iWidth = givenImage.getWidth(), iHeight = givenImage.getHeight();
         BufferedImage newImage = new BufferedImage(iWidth, iHeight, givenImage.getType());
 
-        for (int x = 0; x < iWidth; x++) {
-            for (int y = 0; y < iHeight; y++) {
+        for (int x = 0; x < iWidth; x++) 
+        {
+            for (int y = 0; y < iHeight; y++) 
+            {
                 newImage.setRGB(x, y, givenImage.getRGB(x, y));
             }
         }
@@ -129,19 +159,25 @@ public class HSBPanel extends JPanel {
         return newImage;
     }
 
-    class cButtonListener extends MouseAdapter {
+    class cButtonListener extends MouseAdapter 
+    {
 
         @Override
-        public void mouseReleased(MouseEvent e) {
+        public void mouseReleased(MouseEvent e) 
+        {
             bi2 = null;
             oPanel.DrawBufferedImage(bi);
             saturationSlider.setValue(0);
+            saturationSlider.repaint();
             brightnessSlider.setValue(0);
-            hueSlider.setValue(0);            
+            brightnessSlider.repaint();
+            hueSlider.setValue(0);     
+            hueSlider.repaint();
         }
     }
     
-    class SliderListener implements ChangeListener {
+    class SliderListener implements ChangeListener 
+    {
 
         private Color newColor;
         private float hsbvals[] = new float[3];
@@ -149,29 +185,37 @@ public class HSBPanel extends JPanel {
         private float hue, saturation, brightness;
 
         @Override
-        public void stateChanged(ChangeEvent e) {
+        public void stateChanged(ChangeEvent e) 
+        {
             JSlider sliderOfInteraction = (JSlider) e.getSource();
 
             me.validate();
             me.repaint();
 
-            if (bi2 == null) {
+            if (bi2 == null) 
+            {
                 bi2 = imageCopy(bi);
             }
 
-            switch (sliderOfInteraction.getName()) {
+            switch (sliderOfInteraction.getName()) 
+            {
                 case "brightness":
-                    for (int x = 0; x < bi.getWidth(); x++) {
-                        for (int y = 0; y < bi.getHeight(); y++) {
+                    for (int x = 0; x < bi.getWidth(); x++) 
+                    {
+                        for (int y = 0; y < bi.getHeight(); y++) 
+                        {
                             currentSliderValue = sliderOfInteraction.getValue();
                             newColor = new Color(bi.getRGB(x, y));
                             Color.RGBtoHSB(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), hsbvals);
 
                             brightness = currentSliderValue * .001f;
-                            if (brightness < -.9f) {
+                            if (brightness < -.9f) 
+                            {
                                 brightness = (-.9f);
                             }
-                            if (brightness > 1f) {
+                            
+                            if (brightness > 1f) 
+                            {
                                 brightness = 1f;
                             }
 
@@ -184,14 +228,17 @@ public class HSBPanel extends JPanel {
                     break;//:End brightness
 
                 case "saturation":
-                    for (int x = 0; x < bi.getWidth(); x++) {
-                        for (int y = 0; y < bi.getHeight(); y++) {
+                    for (int x = 0; x < bi.getWidth(); x++) 
+                    {
+                        for (int y = 0; y < bi.getHeight(); y++) 
+                        {
                             currentSliderValue = sliderOfInteraction.getValue();
                             newColor = new Color(bi.getRGB(x, y));
                             Color.RGBtoHSB(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), hsbvals);
 
                             saturation = currentSliderValue * .001f;
-                            if (saturation < -.9f) {
+                            if (saturation < -.9f) 
+                            {
                                 saturation = (-.9f);
                             }
                             if (saturation > 1f) {

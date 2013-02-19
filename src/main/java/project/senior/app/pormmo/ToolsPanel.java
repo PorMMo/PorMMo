@@ -16,13 +16,13 @@ public class ToolsPanel extends ScrollPane
     main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
     
     
+    
     for(int i = 0; i < tools.length; i++)
     {
       Box temp = Box.createVerticalBox();
       temp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-      temp.add(tools[i]); 
-      main.add(temp);
-      
+      temp.add(tools[0]); 
+      main.add(temp); 
     }
   }
 }

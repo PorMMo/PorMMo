@@ -339,32 +339,15 @@ public class UserInterfaceFrame extends JFrame
 
       if (jBX.isSelected())
       {
-        displayShot = gSR.RemoveGreen(imageCopy(displayShot));
+        //:----- Tolerance = 0.5f. 
+        //:--------Add tool to alter tolerance.
+        displayShot = gSR.RemoveGreen_2(imageCopy(displayShot), 0.5f, gSR.GREEN);
       }
 
       outputPanel.DrawBufferedImage(displayShot);
       outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
       hsbPanel.setImage(displayShot);
     }
-//    if(snapshot == null)
-//    {
-//      File ss = new File("Temp/temp" + current + ".jpg");
-//      //ss.deleteOnExit();
-//      mPlayer.saveSnapshot(ss);
-//      
-//      
-//      gSR.GetImageFromFile("Temp/temp" + current++ + ".jpg", BW);
-//      snapshot = BW.Clone();
-//    }
-//    
-//    displayShot = snapshot;
-//    if (jBX.isSelected())
-//    {
-//      displayShot = gSR.RemoveGreen(imageCopy(displayShot));
-//    }
-//
-//    outputPanel.DrawBufferedImage(displayShot);
-//    outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - controlPanel.getHeight()));
   }
 
   private class MediaControlsSliderListener extends MouseAdapter implements ChangeListener

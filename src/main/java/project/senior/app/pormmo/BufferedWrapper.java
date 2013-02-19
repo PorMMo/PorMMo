@@ -19,12 +19,14 @@ public class BufferedWrapper
    * @param img A BufferedImage
    * @param frameNum An int which represents the order this BufferedWrapper is in a sequence of frames
    */
-  public BufferedWrapper(BufferedImage img, int frameNum){
+  public BufferedWrapper(BufferedImage img, int frameNum)
+  {
       this.img = img;
       this.frameNum = frameNum;
   }
   
-  public BufferedWrapper(){
+  public BufferedWrapper()
+  {
       
   }
   
@@ -42,6 +44,22 @@ public class BufferedWrapper
       for (int y = 0; y < iHeight; y++)
       {
         newImage.setRGB(x, y, img.getRGB(x, y));
+      }
+    }
+
+    return newImage;
+  }
+  
+  public static BufferedImage CloneImg(BufferedImage bi)
+  {
+    int iWidth = bi.getWidth(), iHeight = bi.getHeight();
+    BufferedImage newImage = new BufferedImage(iWidth, iHeight, bi.getType());
+
+    for (int x = 0; x < iWidth; x++)
+    {
+      for (int y = 0; y < iHeight; y++)
+      {
+        newImage.setRGB(x, y, bi.getRGB(x, y));
       }
     }
 
