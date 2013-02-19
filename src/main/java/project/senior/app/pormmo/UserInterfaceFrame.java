@@ -79,6 +79,7 @@ public class UserInterfaceFrame extends JFrame
 
   private void initFrame()
   {
+    setTitle("PorMMo");
     setPreferredSize(new Dimension(640, 500));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
