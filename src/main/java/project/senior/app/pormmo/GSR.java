@@ -36,7 +36,7 @@ public class GSR
         c = new Color(picture.getRGB(i,j));
         c.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsv);
         
-        
+        System.out.println(c.getGreen());
         if(hsv[0] < 0.38f && hsv[0] > 0.22f)
           picture.setRGB(i, j, Color.TRANSLUCENT);    
       }//:End for(i,j)   
