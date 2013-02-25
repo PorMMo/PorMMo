@@ -34,6 +34,11 @@ public class OutputPanel extends JPanel
     setLayout(bLayout);
     setControls();
   }
+  
+  public BufferedImage GetLatestBI()
+  {
+    return bi;
+  }
 
   private void setControls()
   {
@@ -53,7 +58,9 @@ public class OutputPanel extends JPanel
         {
           isCropping = false;
           stopCropPoint = e.getPoint();
-          Crop();          
+
+          CheckPoints();
+          Crop();
         }
 
         @Override
@@ -85,34 +92,45 @@ public class OutputPanel extends JPanel
     }
   }
 
+  private void CheckPoints()
+  {
+    if (startCropPoint.x > stopCropPoint.x)
+    {
+      int temp = stopCropPoint.x;
+      stopCropPoint.x = startCropPoint.x;
+      startCropPoint.x = temp;
+    }
+    if (startCropPoint.y > stopCropPoint.y)
+    {
+      int temp = stopCropPoint.y;
+      stopCropPoint.y = startCropPoint.y;
+      startCropPoint.y = temp;
+    }
+  }
+
   public void Crop()
   {
     BufferedImage temp = new BufferedImage(stopCropPoint.x - startCropPoint.x, stopCropPoint.y - startCropPoint.y, bi.getType());
-    
-    int w = stopCropPoint.x-startCropPoint.x;
-    int h = stopCropPoint.y-startCropPoint.y;
-    
-    for(int i=0; i<w; i++)
+
+    int w = stopCropPoint.x - startCropPoint.x;
+    int h = stopCropPoint.y - startCropPoint.y;
+
+    for (int i = 0; i < w; i++)
     {
-      for(int j=0; j<h; j++)
+      for (int j = 0; j < h; j++)
       {
-        temp.setRGB(i,j,bi.getRGB(startCropPoint.x+i, startCropPoint.y+j));
+        temp.setRGB(i, j, bi.getRGB(startCropPoint.x + i, startCropPoint.y + j));
       }
     }
-    
+
     int response = JOptionPane.showConfirmDialog(
-            this
-            ,"Is this the what you want?"
-            ,"Confirm"
-            ,JOptionPane.OK_CANCEL_OPTION
-            ,JOptionPane.INFORMATION_MESSAGE
-            ,new ImageIcon(temp));
-    
-    if ( response == JOptionPane.OK_OPTION)
+            this, "Is this the what you want?", "Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, new ImageIcon(temp));
+
+    if (response == JOptionPane.OK_OPTION)
     {
       bi = temp;
       repaint();
-      setSize(w,h);
+      setSize(w, h);
     }
 
   }
@@ -161,7 +179,10 @@ public class OutputPanel extends JPanel
       page.setColor(Color.red);
       if (isCropping)
       {
-        page.drawRect(startCropPoint.x, startCropPoint.y, stopCropPoint.x - startCropPoint.x, stopCropPoint.y - startCropPoint.y);
+        page.drawRect(((startCropPoint.x > stopCropPoint.x) ? stopCropPoint.x : startCropPoint.x), 
+                       ((startCropPoint.y > stopCropPoint.y) ? stopCropPoint.y : startCropPoint.y), 
+                         Math.abs(stopCropPoint.x - startCropPoint.x), 
+                           Math.abs(stopCropPoint.y - startCropPoint.y));
       }
     }
   }
