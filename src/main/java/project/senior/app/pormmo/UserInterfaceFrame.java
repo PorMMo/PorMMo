@@ -115,14 +115,18 @@ public class UserInterfaceFrame extends JFrame
   
   private void initDisplay()
   {
-    JPanel[] tools = new JPanel[2];
+    JPanel[] tools = new JPanel[3];
     hsbPanel = new HSBPanel(null, outputPanel);
     hsbPanel.setPreferredSize(new Dimension(100, 200));
-    
     tools[0] = hsbPanel;
+    
     TolerancePanel tp = new TolerancePanel(outputPanel);
-    tp.setPreferredSize(new Dimension(100, 100));
+    tp.setMinimumSize(new Dimension(100, 100));
     tools[1] = tp;
+    
+    FilterPanel fp = new FilterPanel(outputPanel, hsbPanel);
+    fp.setMinimumSize(new Dimension(100,200));
+    tools[2] = fp;
     
     left = new ToolsPanel(tools);
     

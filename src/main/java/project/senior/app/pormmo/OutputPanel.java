@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * @author Fisher
+ * @author John Fisher, Shelby Copeland
  */
 public class OutputPanel extends JPanel
 {

@@ -17,6 +17,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * 
+ * @author Shelby Copeland, John Fisher
+ */
 public class HSBPanel extends JPanel
 {
 
@@ -47,6 +51,12 @@ public class HSBPanel extends JPanel
     bl = new BorderLayout();
     setLayout(bl);
     initControls();
+  }
+  
+  public void Reset(BufferedWrapper bw)
+  {
+    bi2 = null;
+    bi = bw.Clone();
   }
 
   private void initControls()
