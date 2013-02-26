@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.ScrollPane;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -94,9 +92,9 @@ public class UserInterfaceFrame extends JFrame
   
   private void initPlayer()
   {
-    Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+    Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);    
     mPlayerFactory = new MediaPlayerFactory();
-    mPlayer = mPlayerFactory.newHeadlessMediaPlayer();
+    mPlayer = mPlayerFactory.newEmbeddedMediaPlayer();
     mPlayer.addMediaPlayerEventListener(new PlayerEventListener());
   }
   
@@ -185,14 +183,14 @@ public class UserInterfaceFrame extends JFrame
     JButton fwdButton = new JButton("Forward");
     fwdButton.addMouseListener(new MediaControlsButtonListener());
     fwdButton.setName("forward");
-    controlGBC.gridx = 3;
+    controlGBC.gridx = 2;
     controlGBC.gridy = 0;
     controlPanel.add(fwdButton, controlGBC);
     
     JButton rwdButton = new JButton("Rewind");
     rwdButton.addMouseListener(new MediaControlsButtonListener());
     rwdButton.setName("rewind");
-    controlGBC.gridx = 2;
+    controlGBC.gridx = 3;
     controlGBC.gridy = 0;
     controlPanel.add(rwdButton, controlGBC);
     
@@ -219,37 +217,31 @@ public class UserInterfaceFrame extends JFrame
     controlGBC.gridy = 1;
     controlPanel.add(reset, controlGBC);
 
-    JLabel spaceHolder2 = new JLabel(" ");
-    controlGBC.gridx = 1;
-    controlGBC.gridy = 1;
-    controlPanel.add(spaceHolder2, controlGBC);
-    
+    JPanel gsrControlPanel = new JPanel();
     jBX = new JCheckBox();
     jBX.setSelected(true);
     jBX.addMouseListener(new MediaControlsCheckBoxListener());
     jBX.setName("greenscreencheckbox");
-    controlGBC.gridx = 2;
+    gsrControlPanel.add(jBX);
+    controlGBC.gridx = 1;
     controlGBC.gridy = 1;
-    controlPanel.add(jBX, controlGBC);
+    controlPanel.add(gsrControlPanel, controlGBC);
     
     JLabel greenScreenLabel = new JLabel("Green Screen");
-    controlGBC.gridx = 3;
-    controlGBC.gridy = 1;
-    controlPanel.add(greenScreenLabel, controlGBC);
+    gsrControlPanel.add(greenScreenLabel);
+    controlPanel.add(gsrControlPanel, controlGBC);
     
     JLabel spaceHolder = new JLabel(" ");
-    controlGBC.gridx = 4;
+    controlGBC.gridx = 3;
     controlGBC.gridy = 1;
     controlPanel.add(spaceHolder, controlGBC);
-
-    
     
     posSlider = new JSlider();
     posSlider.setName("pslider");
     MediaControlsSliderListener mCSL = new MediaControlsSliderListener();
     posSlider.addChangeListener(mCSL);
     posSlider.addMouseListener(mCSL);
-    controlGBC.gridx = 5;
+    controlGBC.gridx = 2;
     controlGBC.gridy = 1;
     controlGBC.gridwidth = 4;
     controlPanel.add(posSlider, controlGBC);

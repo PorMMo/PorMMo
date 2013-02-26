@@ -141,8 +141,6 @@ public class OutputPanel extends JPanel
     {
       this.bi = bi;
 
-//            setSliders();
-
       setSize(new Dimension(bi.getWidth(), bi.getHeight()));
       setMinimumSize(new Dimension(bi.getWidth(), bi.getHeight()));
 
