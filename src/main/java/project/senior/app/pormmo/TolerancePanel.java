@@ -46,7 +46,7 @@ public class TolerancePanel extends JPanel
     
     gbc.gridx = 0;
     gbc.gridy = 0;
-    inner.add(new JLabel("Green Screen Tolerance: "), gbc);
+    inner.add(new JLabel("Green Screen Removal\n(Tolerance): "), gbc);
     
     gbc.gridx = 0;
     gbc.gridy = 1;

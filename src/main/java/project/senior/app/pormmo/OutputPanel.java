@@ -155,7 +155,7 @@ public class OutputPanel extends JPanel
   {
     if (bi != null)
     {
-      bi = gSR.RemoveGreen_2(bi, T, H);
+      bi = gSR.RemoveGreen_3(bi, T);//, H);
       this.repaint();
     }
   }

@@ -254,7 +254,7 @@ public class Filters
   
   //============================================================================
   //====                          GrayScale                                 ====
-  //============================================================================
+  
   public BufferedWrapper GrayScale(BufferedWrapper bw)
   {
     BufferedWrapper temp = new BufferedWrapper();

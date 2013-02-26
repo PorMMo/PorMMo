@@ -391,7 +391,8 @@ public class UserInterfaceFrame extends JFrame
       
       if (jBX.isSelected())
       {
-        displayShot = gSR.RemoveGreen_2(imageCopy(displayShot), TOLERANCE, gSR.GREEN);
+        //displayShot = gSR.RemoveGreen_2(imageCopy(displayShot), TOLERANCE, gSR.GREEN);
+        displayShot = gSR.RemoveGreen_3(BufferedWrapper.CloneImg(snapshot), 0.6f);
       }
       
       outputPanel.DrawBufferedImage(displayShot);
