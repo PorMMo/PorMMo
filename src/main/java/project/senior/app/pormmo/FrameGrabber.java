@@ -5,6 +5,7 @@
 
 package project.senior.app.pormmo;
 
+import java.util.ArrayList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
@@ -13,14 +14,14 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
  */
 public class FrameGrabber {
 
-    private MediaPlayer mPlayer;
+    private MediaPlayer mplayer;
     
     /**
      * Creates a FrameGrabber that will extract the frames from the desired media player
      * @param mediaPlayer 
      */
     public FrameGrabber(MediaPlayer mediaPlayer){
-        mPlayer = mediaPlayer;
+        mplayer = mediaPlayer;
     }
     
     /**
@@ -32,9 +33,31 @@ public class FrameGrabber {
      */
     public BufferedWrapper[] grabFrames(float start, float stop, float fps){
         
+        /*
+         * I am going to use an ArrayList for now
+         * Using an array will require an algorithm that determins the number of frames of output
+         * An array is desireable, but low priority
+         */
+        ArrayList<BufferedWrapper> frames = new ArrayList<>();
+        
+        mplayer.setPause(true);
+        mplayer.setPosition(start);
+        
+        //For now, I will assume that upscaling and downscaling the fps does not require seperate algorithms
+        long skipLength;
+        skipLength = (long)(1/ (fps /1000));
+        long frameNum = 0;
         
         
-        return null;
+        while(mplayer.getPosition() < stop){
+            frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
+            frameNum++;
+            mplayer.skip(skipLength);
+        }
+        
+        BufferedWrapper[] outFrames = new BufferedWrapper[frames.size()];
+        
+        return frames.toArray(outFrames);
         
     }
 }

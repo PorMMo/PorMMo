@@ -41,7 +41,7 @@ public class SaveUnit {
      * @param orderNum
      * @return The name of the output file
      */
-    private static String fileName( int orderNum, String filePath){
+    private static String fileName( long orderNum, String filePath){
         return filePath + orderNum;
     }
     
