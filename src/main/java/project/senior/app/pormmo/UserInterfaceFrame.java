@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.ScrollPane;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -52,7 +53,7 @@ public class UserInterfaceFrame extends JFrame
   private GridBagLayout controlLayout;
   private GridBagConstraints controlGBC;
   private ScrollPane sPane;
-  private JFrame me;
+  private JFrame me, playerFrame;
   private BufferedImage snapshot, displayShot;
   private String fileDirectory;
   private MediaPlayerFactory mPlayerFactory;
@@ -66,6 +67,7 @@ public class UserInterfaceFrame extends JFrame
   private GSR gSR;
   private int current;
   private BufferedWrapper BW;
+  private Dimension screenSize;
   
   public UserInterfaceFrame()
   {
@@ -82,8 +84,10 @@ public class UserInterfaceFrame extends JFrame
   
   private void initFrame()
   {
+    screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    
     setTitle("PorMMo");
-    setPreferredSize(new Dimension(800, 600));
+    setPreferredSize(new Dimension((int)screenSize.getWidth()/2, (int)screenSize.getHeight()));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     this.addComponentListener(new FrameListener());
@@ -96,12 +100,10 @@ public class UserInterfaceFrame extends JFrame
   {
     Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);    
 
-    JFrame playerFrame = new JFrame("Video Player");
-    playerFrame.setPreferredSize(new Dimension(100,100));
-    playerFrame.setMaximumSize(new Dimension(200,200));
-    playerFrame.setSize(new Dimension(200,200));
-    playerFrame.setVisible(true);
-    playerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    playerFrame = new JFrame("Video Player");
+    playerFrame.setSize(new Dimension((int)screenSize.getWidth()/2, (int)screenSize.getHeight()));
+    playerFrame.setLocation((int)screenSize.getWidth()/2, 0);
+    playerFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     playerFrame.setContentPane(mediaPlayerComponent);
@@ -260,22 +262,6 @@ public class UserInterfaceFrame extends JFrame
     controlPanel.add(posSlider, controlGBC);
     
   }
-  
-  public BufferedImage imageCopy(BufferedImage givenImage)
-  {
-    int iWidth = givenImage.getWidth(), iHeight = givenImage.getHeight();
-    BufferedImage newImage = new BufferedImage(iWidth, iHeight, givenImage.getType());
-    
-    for (int x = 0; x < iWidth; x++)
-    {
-      for (int y = 0; y < iHeight; y++)
-      {
-        newImage.setRGB(x, y, givenImage.getRGB(x, y));
-      }
-    }
-    
-    return newImage;
-  }
 
   /**
    * Check and do settings. 0 = Check for the Settings Directory.
@@ -370,7 +356,7 @@ public class UserInterfaceFrame extends JFrame
     {
       try
       {
-        //mPlayer.startMedia(selectedInputFile.getAbsolutePath());
+        playerFrame.setVisible(true);
         mediaPlayerComponent.getMediaPlayer().playMedia(selectedInputFile.getAbsolutePath());
       }
       catch (java.lang.NoClassDefFoundError e)
@@ -396,7 +382,6 @@ public class UserInterfaceFrame extends JFrame
       
       if (jBX.isSelected())
       {
-        //displayShot = gSR.RemoveGreen_2(imageCopy(displayShot), TOLERANCE, gSR.GREEN);
         displayShot = gSR.RemoveGreen_3(BufferedWrapper.CloneImg(snapshot), 0.6f);
       }
       
