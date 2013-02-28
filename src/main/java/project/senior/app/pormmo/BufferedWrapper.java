@@ -12,14 +12,14 @@ public class BufferedWrapper
    * Pass by Reference.
    */
   public BufferedImage img;
-  public int frameNum;
+  public long frameNum;
   
   /**
    * Constructor
    * @param img A BufferedImage
    * @param frameNum An int which represents the order this BufferedWrapper is in a sequence of frames
    */
-  public BufferedWrapper(BufferedImage img, int frameNum)
+  public BufferedWrapper(BufferedImage img, long frameNum)
   {
       this.img = img;
       this.frameNum = frameNum;
