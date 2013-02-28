@@ -49,6 +49,8 @@ public class OutputPanel extends JPanel
         @Override
         public void mousePressed(MouseEvent e)
         {
+          if(!IsReady()) return;
+          
           isCropping = true;
           startCropPoint = e.getPoint();
         }
@@ -56,6 +58,7 @@ public class OutputPanel extends JPanel
         @Override
         public void mouseReleased(MouseEvent e)
         {
+          if(!IsReady()) return;
           isCropping = false;
           stopCropPoint = e.getPoint();
 
@@ -75,10 +78,11 @@ public class OutputPanel extends JPanel
         @Override
         public void mouseDragged(MouseEvent e)
         {
-          if (!isCropping)
+          if (!isCropping || !IsReady())
           {
             return;
           }
+          
 
           stopCropPoint = e.getPoint();
           repaint();
