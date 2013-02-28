@@ -31,6 +31,7 @@ import javax.swing.event.ChangeListener;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.binding.internal.libvlc_state_t;
+import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -56,6 +57,7 @@ public class UserInterfaceFrame extends JFrame
   private String fileDirectory;
   private MediaPlayerFactory mPlayerFactory;
   private MediaPlayer mPlayer;
+  private EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private JButton playPauseButton;
   private JSlider posSlider;
   private boolean userSelectingLocation = false;
@@ -93,8 +95,19 @@ public class UserInterfaceFrame extends JFrame
   private void initPlayer()
   {
     Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);    
-    mPlayerFactory = new MediaPlayerFactory();
-    mPlayer = mPlayerFactory.newEmbeddedMediaPlayer();
+
+    JFrame playerFrame = new JFrame("Video Player");
+    playerFrame.setPreferredSize(new Dimension(100,100));
+    playerFrame.setMaximumSize(new Dimension(200,200));
+    playerFrame.setSize(new Dimension(200,200));
+    playerFrame.setVisible(true);
+    playerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+    mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+    playerFrame.setContentPane(mediaPlayerComponent);
+    
+    mPlayerFactory = mediaPlayerComponent.getMediaPlayerFactory();
+    mPlayer = mediaPlayerComponent.getMediaPlayer();
     mPlayer.addMediaPlayerEventListener(new PlayerEventListener());
   }
   
@@ -357,8 +370,8 @@ public class UserInterfaceFrame extends JFrame
     {
       try
       {
-        mPlayer.startMedia(selectedInputFile.getAbsolutePath());
-        
+        //mPlayer.startMedia(selectedInputFile.getAbsolutePath());
+        mediaPlayerComponent.getMediaPlayer().playMedia(selectedInputFile.getAbsolutePath());
       }
       catch (java.lang.NoClassDefFoundError e)
       {
