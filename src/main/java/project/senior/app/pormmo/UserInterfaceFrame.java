@@ -128,7 +128,7 @@ public class UserInterfaceFrame extends JFrame
   
   private void initDisplay()
   {
-    JPanel[] tools = new JPanel[3];
+    JPanel[] tools = new JPanel[4];
     hsbPanel = new HSBPanel(null, outputPanel);
     hsbPanel.setPreferredSize(new Dimension(100, 200));
     tools[0] = hsbPanel;
@@ -140,6 +140,10 @@ public class UserInterfaceFrame extends JFrame
     FilterPanel fp = new FilterPanel(outputPanel, hsbPanel);
     fp.setMinimumSize(new Dimension(100,200));
     tools[2] = fp;
+    
+    StartEndPanel sep = new StartEndPanel(mPlayer);
+    sep.setMinimumSize(new Dimension(100,200));
+    tools[3] = sep;
     
     left = new ToolsPanel(tools);
     
