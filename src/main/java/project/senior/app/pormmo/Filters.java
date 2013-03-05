@@ -1,3 +1,10 @@
+//==============================================================================
+//==  Due to PorMMo being open source, I will be leaving some other methods   ==
+//==         That we do not use as often, for learning experience.            ==
+//==                                                                          ==
+//==   You may use this in your own projects if and only if you give credit   ==
+//==         To the PorMMo team or the Authors of this specified file.        ==
+//==============================================================================
 package project.senior.app.pormmo;
 
 import java.awt.Color;
@@ -254,6 +261,7 @@ public class Filters
   
   //============================================================================
   //====                          GrayScale                                 ====
+  //============================================================================
   
   public BufferedWrapper GrayScale(BufferedWrapper bw)
   {
@@ -300,5 +308,98 @@ public class Filters
       }
     
     bw.img = img;
+  }
+  
+  //============================================================================
+  //====                          Gaussian                                  ====
+  //============================================================================
+  /**
+   * Applies a [3x3] mask based on the gaussian blur methodology.
+   * 
+   * @param bw BufferedWrapper containing original image.
+   * @return BufferedWrapper containing your GB'd image. 
+   */
+  public BufferedWrapper GaussianBlur(BufferedWrapper bw)
+  {  
+    BufferedWrapper temp = new BufferedWrapper();
+    temp.img = bw.Clone();
+    
+    int[] mask = new int[9];
+    
+    for(int i = 1; i < temp.img.getWidth() - 1; i++)
+      for(int j = 1; j < temp.img.getHeight() - 1; j++)
+      {
+        mask[0] = bw.img.getRGB(i - 1, j - 1);
+        mask[1] = bw.img.getRGB(i    , j - 1);
+        mask[2] = bw.img.getRGB(i + 1, j - 1);
+        mask[3] = bw.img.getRGB(i - 1, j);
+        mask[4] = bw.img.getRGB(i    , j);
+        mask[5] = bw.img.getRGB(i + 1, j);
+        mask[6] = bw.img.getRGB(i - 1, j + 1);
+        mask[7] = bw.img.getRGB(i    , j + 1);
+        mask[8] = bw.img.getRGB(i + 1, j + 1);
+        //:^Yes this "could" be in a for loop
+        //:However, that is just extra computation for a small amount.
+        
+        temp.img.setRGB(i, j, gaussian(mask));
+      }
+    
+    return temp;
+  }
+  
+  /**
+   * Applies a [3x3] mask based on the gaussian blue methodology.
+   * Note: Will overwrite bw.img
+   * 
+   * @param bw BufferedWrapper that contains the image to be modified.
+   * @returns Nothing. [bw] will contain the final image.
+   */
+  public static void GaussianBlurStatic(BufferedWrapper bw)
+  {  
+    BufferedImage img = bw.Clone();
+    
+    int[] mask = new int[9];
+    
+    for(int i = 1; i < img.getWidth() - 1; i++)
+      for(int j = 1; j < img.getHeight() - 1; j++)
+      {
+        mask[0] = bw.img.getRGB(i - 1, j - 1);
+        mask[1] = bw.img.getRGB(i    , j - 1);
+        mask[2] = bw.img.getRGB(i + 1, j - 1);
+        mask[3] = bw.img.getRGB(i - 1, j);
+        mask[4] = bw.img.getRGB(i    , j);
+        mask[5] = bw.img.getRGB(i + 1, j);
+        mask[6] = bw.img.getRGB(i - 1, j + 1);
+        mask[7] = bw.img.getRGB(i    , j + 1);
+        mask[8] = bw.img.getRGB(i + 1, j + 1);
+        //:^Yes this "could" be in a for loop
+        //:However, that is just extra computation for a small amount.
+        
+        img.setRGB(i, j, gaussian(mask));
+      }
+    
+    bw.img = img;
+  }
+  
+  //:simple gaussian finder
+  private static int gaussian(int[] mask)
+  {
+    Color c, end;
+    int r = 0, g = 0, b = 0;
+    int[] multi = new int[]{1, 2, 1,
+                            2, 4, 2,
+                            1, 2, 1};
+
+    for(int i = 0; i < mask.length; i++)
+    {
+      c = new Color(mask[i]);
+      r += c.getRed()   * multi[i];
+      g += c.getGreen() * multi[i];
+      b += c.getBlue()  * multi[i];
+    }
+    
+    end = new Color(r/16, g/16, b/16);
+    
+    return end.getRGB();
   }
 }
