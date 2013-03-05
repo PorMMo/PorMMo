@@ -113,7 +113,13 @@ public class GSR
   {
     BufferedImage picture = before.getSubimage(0, 0, before.getWidth(),
             before.getHeight());
-
+    BufferedWrapper bw = new BufferedWrapper();
+    bw.img = BufferedWrapper.CloneImg(picture);
+    
+    Filters.GaussianBlurStatic(bw); 
+    Filters.MeanBlurStatic(bw);
+    Filters.GaussianBlurStatic(bw);
+    
     Color c;
     int r, g, b;
     float ratio = Ratio;
@@ -122,7 +128,7 @@ public class GSR
     {
       for (int j = 0; j < picture.getHeight(); j++)
       {
-        c = new Color(picture.getRGB(i, j));
+        c = new Color(bw.img.getRGB(i, j));
         r = c.getRed();
         b = c.getBlue();
         g = c.getGreen();
@@ -131,11 +137,25 @@ public class GSR
         g += 1;//:Lenient
         if (g >= r && g >= b)
         {
-          picture.setRGB(i, j, Color.TRANSLUCENT);
+          bw.img.setRGB(i, j, Color.TRANSLUCENT);
         }
       }
     }
-
+    
+    
+    for (int i = 0; i < picture.getWidth(); i++)
+    {
+      for (int j = 0; j < picture.getHeight(); j++)
+      {
+          c = new Color(bw.img.getRGB(i, j));
+          
+          if(c.getRGB() == Color.TRANSLUCENT)
+          {
+             picture.setRGB(i, j, Color.TRANSLUCENT); 
+          }
+      }
+    }
+    
     return picture;
   }
 
