@@ -109,6 +109,22 @@ public class FilterPanel extends JPanel
     //--------------------------------------------------------------------------
     gbc.gridx = 0;
     gbc.gridy = 5;
+    JButton gaussian = new JButton("Gaussian [3x3]");
+    gaussian.setSize(75,40);
+    gaussian.addActionListener(new ActionListener()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        bw.img = main.GetLatestBI();
+        Filters.GaussianBlurStatic(bw);
+        main.DrawBufferedImage(bw.img);
+      }
+    });
+    inner.add(gaussian, gbc);
+    //--------------------------------------------------------------------------
+    gbc.gridx = 0;
+    gbc.gridy = 6;
     JButton apply = new JButton("Apply Changes");
     apply.setSize(75,40);
     apply.addActionListener(new ActionListener()
