@@ -100,7 +100,7 @@ public class UserInterfaceFrame extends JFrame
   {
     Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);    
 
-    playerFrame = new JFrame("Video Player");
+    playerFrame = new JFrame("PorMMo Video Player (Embedded VLC)");
     playerFrame.setSize(new Dimension((int)screenSize.getWidth()/2, (int)screenSize.getHeight()));
     playerFrame.setLocation((int)screenSize.getWidth()/2, 0);
     playerFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -128,7 +128,7 @@ public class UserInterfaceFrame extends JFrame
   
   private void initDisplay()
   {
-    JPanel[] tools = new JPanel[3];
+    JPanel[] tools = new JPanel[4];
     hsbPanel = new HSBPanel(null, outputPanel);
     hsbPanel.setPreferredSize(new Dimension(100, 200));
     tools[0] = hsbPanel;
@@ -140,6 +140,10 @@ public class UserInterfaceFrame extends JFrame
     FilterPanel fp = new FilterPanel(outputPanel, hsbPanel);
     fp.setMinimumSize(new Dimension(100,200));
     tools[2] = fp;
+    
+    StartEndPanel sep = new StartEndPanel(mPlayer);
+    sep.setMinimumSize(new Dimension(100,200));
+    tools[3] = sep;
     
     left = new ToolsPanel(tools);
     
@@ -155,18 +159,13 @@ public class UserInterfaceFrame extends JFrame
   
   private void initMenu()
   {
-    JMenuBar frameMenuBar = new JMenuBar();
-    JMenu fileMenu = new JMenu("File");
-    JMenuItem openMenuItem = new JMenuItem("Open");
-    openMenuItem.addMouseListener(new UserInterfaceFrameMenuListener());
-    fileMenu.add(openMenuItem);
-    JMenuItem exitMenuItem = new JMenuItem("Exit");
-    exitMenuItem.addMouseListener(new UserInterfaceFrameMenuListener());
-    fileMenu.add(exitMenuItem);
+    AppMenuBar amb = new AppMenuBar(this);
+    UserInterfaceFrameMenuListener listener = 
+            new UserInterfaceFrameMenuListener();
     
-    frameMenuBar.add(fileMenu);
-    
-    setJMenuBar(frameMenuBar);
+    JMenu jMenu = amb.AddMenuItem("File", listener);
+    amb.AddSubMenuItem("Open", jMenu, listener);
+    amb.AddSubMenuItem("Exit", jMenu, listener);
   }
   
   private void initOutputPanel()
