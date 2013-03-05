@@ -1,3 +1,5 @@
 target/**/*
 Settings/*
 Temp/*
+*.png
+commands.txt

@@ -127,7 +127,7 @@ public class StartEndPanel extends javax.swing.JPanel {
         FrameGrabber fg = new FrameGrabber(mplayer);
         BufferedWrapper[] bwa = fg.grabFrames(this.getStartTime(), this.getEndTime(), this.getFrameRate());
         for(int i = 0; i < bwa.length; i++){
-            SaveUnit.save(bwa[i], "C:\\Users\\TheMax\\Documents\\0_Homework\\PorMMo Test\\Comparison");
+            SaveUnit.save(bwa[i], "");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
