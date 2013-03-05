@@ -1,3 +1,10 @@
+//==============================================================================
+//==  Due to PorMMo being open source, I will be leaving some other methods   ==
+//==         That we do not use as often, for learning experience.            ==
+//==                                                                          ==
+//==   You may use this in your own projects if and only if you give credit   ==
+//==         To the PorMMo team or the Authors of this specified file.        ==
+//==============================================================================
 package project.senior.app.pormmo;
 
 import java.awt.Color;
@@ -11,7 +18,6 @@ import javax.imageio.ImageIO;
  */
 public class GSR
 {
-
   public final float GREEN = 0.33f;
   public final float BLUE = 0.66f;
   //Possible add more colours?
