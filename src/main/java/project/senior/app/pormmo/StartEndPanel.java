@@ -14,6 +14,8 @@ public class StartEndPanel extends javax.swing.JPanel {
 
     private MediaPlayer mplayer;
     
+    private String def = "Defualt";
+    
     /**
      * Creates new form StartEndPanel
      */
@@ -37,6 +39,7 @@ public class StartEndPanel extends javax.swing.JPanel {
         startTimeTxt = new javax.swing.JTextField();
         endTimeTxt = new javax.swing.JTextField();
         frameRateTxt = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         jButton1.setText("Start Time");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -56,27 +59,39 @@ public class StartEndPanel extends javax.swing.JPanel {
         jLabel1.setText("Frames Rate ");
         jLabel1.setToolTipText("");
 
-        startTimeTxt.setText("Default");
+        startTimeTxt.setText(def);
 
-        endTimeTxt.setText("Defualt");
+        endTimeTxt.setText(def);
 
-        frameRateTxt.setText("Default");
+        frameRateTxt.setText(def);
+
+        jButton3.setText("Output");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(startTimeTxt)
-                    .addComponent(frameRateTxt)
-                    .addComponent(endTimeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(startTimeTxt)
+                            .addComponent(frameRateTxt)
+                            .addComponent(endTimeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(jButton3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -94,7 +109,9 @@ public class StartEndPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(frameRateTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -106,14 +123,23 @@ public class StartEndPanel extends javax.swing.JPanel {
         endTimeTxt.setText(""+mplayer.getTime());
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        FrameGrabber fg = new FrameGrabber(mplayer);
+        BufferedWrapper[] bwa = fg.grabFrames(this.getStartTime(), this.getEndTime(), this.getFrameRate());
+        for(int i = 0; i < bwa.length; i++){
+            SaveUnit.save(bwa[i], "C:\\Users\\TheMax\\Documents\\0_Homework\\PorMMo Test\\Comparison");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     public long getStartTime(){
-        if (startTimeTxt.getText().equalsIgnoreCase("default") 
+        if (startTimeTxt.getText().equalsIgnoreCase(def) 
                 || startTimeTxt.getText().equalsIgnoreCase("")){
             return 0;
         }
         else{
             try{
-                return Long.parseLong(startTimeTxt.getText());
+                
+                return Long.parseLong(startTimeTxt.getText());//Actual lenght
             }
             catch(NumberFormatException e){
                 return -1;//negative numbers will act as a fail safe against invalid input
@@ -122,24 +148,26 @@ public class StartEndPanel extends javax.swing.JPanel {
     }
     
     public long getEndTime(){
-        if (endTimeTxt.getText().equalsIgnoreCase("default") 
+        String end = endTimeTxt.getText();
+        if (end.equalsIgnoreCase(def) 
                 || endTimeTxt.getText().equalsIgnoreCase("")){
-            return 0;
+            return mplayer.getLength();
         }
         else{
             try{
                 return Long.parseLong(endTimeTxt.getText());
             }
             catch(NumberFormatException e){
-                return -1;//negative numbers will act as a fail safe against invalid input
+                return mplayer.getLength();//Just for testing I commented out the next line only temporarily
+                //return -1;//negative numbers will act as a fail safe against invalid input
             }
         }
     }
     
     public float getFrameRate(){
-        if (frameRateTxt.getText().equalsIgnoreCase("default") 
+        if (frameRateTxt.getText().equalsIgnoreCase(def) 
                 || frameRateTxt.getText().equalsIgnoreCase("")){
-            return 0;
+            return mplayer.getFps();
         }
         else{
             try{
@@ -156,6 +184,7 @@ public class StartEndPanel extends javax.swing.JPanel {
     private javax.swing.JTextField frameRateTxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField startTimeTxt;
     // End of variables declaration//GEN-END:variables

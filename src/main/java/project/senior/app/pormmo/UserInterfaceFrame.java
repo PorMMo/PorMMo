@@ -77,8 +77,8 @@ public class UserInterfaceFrame extends JFrame
     initMenu();
     initControlPanel();
     initOutputPanel();
-    initDisplay();
     initPlayer();
+    initDisplay();
     showFrame();
   }
   

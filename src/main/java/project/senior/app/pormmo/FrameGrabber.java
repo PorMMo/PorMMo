@@ -31,7 +31,7 @@ public class FrameGrabber {
      * @param fps how many frames to grab per second of video
      * @return A BufferedWrapper array ready to be processed and saved
      */
-    public BufferedWrapper[] grabFrames(float start, float stop, float fps){
+    public BufferedWrapper[] grabFrames(long start, long stop, float fps){
         
         /*
          * I am going to use an ArrayList for now
@@ -41,18 +41,26 @@ public class FrameGrabber {
         ArrayList<BufferedWrapper> frames = new ArrayList<>();
         
         mplayer.setPause(true);
-        mplayer.setPosition(start);
+        mplayer.setPosition(0);
         
         //For now, I will assume that upscaling and downscaling the fps does not require seperate algorithms
         long skipLength;
         skipLength = (long)(1/ (fps /1000));
         long frameNum = 0;
         
-        
-        while(mplayer.getPosition() < stop){
-            frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
-            frameNum++;
-            mplayer.skip(skipLength);
+        if(mplayer.getFps() == fps){
+            while(mplayer.getTime() < stop){
+                frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
+                frameNum++;
+                mplayer.nextFrame();
+            }
+        }
+        else{
+            while(mplayer.getTime() < stop){
+                frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
+                frameNum++;
+                mplayer.skip(skipLength);
+            }
         }
         
         BufferedWrapper[] outFrames = new BufferedWrapper[frames.size()];
