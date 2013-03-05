@@ -42,7 +42,7 @@ public class SaveUnit {
      * @return The name of the output file
      */
     private static String fileName( long orderNum, String filePath){
-        return filePath + orderNum;
+        return filePath + orderNum + ".png";
     }
     
     

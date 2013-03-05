@@ -14,6 +14,8 @@ public class StartEndPanel extends javax.swing.JPanel {
 
     private MediaPlayer mplayer;
     
+    private String def = "Defualt";
+    
     /**
      * Creates new form StartEndPanel
      */
@@ -57,11 +59,11 @@ public class StartEndPanel extends javax.swing.JPanel {
         jLabel1.setText("Frames Rate ");
         jLabel1.setToolTipText("");
 
-        startTimeTxt.setText("Default");
+        startTimeTxt.setText(def);
 
-        endTimeTxt.setText("Defualt");
+        endTimeTxt.setText(def);
 
-        frameRateTxt.setText("Default");
+        frameRateTxt.setText(def);
 
         jButton3.setText("Output");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -130,7 +132,7 @@ public class StartEndPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     public long getStartTime(){
-        if (startTimeTxt.getText().equalsIgnoreCase("default") 
+        if (startTimeTxt.getText().equalsIgnoreCase(def) 
                 || startTimeTxt.getText().equalsIgnoreCase("")){
             return 0;
         }
@@ -147,7 +149,7 @@ public class StartEndPanel extends javax.swing.JPanel {
     
     public long getEndTime(){
         String end = endTimeTxt.getText();
-        if (end.equalsIgnoreCase("default") 
+        if (end.equalsIgnoreCase(def) 
                 || endTimeTxt.getText().equalsIgnoreCase("")){
             return mplayer.getLength();
         }
@@ -163,9 +165,9 @@ public class StartEndPanel extends javax.swing.JPanel {
     }
     
     public float getFrameRate(){
-        if (frameRateTxt.getText().equalsIgnoreCase("default") 
+        if (frameRateTxt.getText().equalsIgnoreCase(def) 
                 || frameRateTxt.getText().equalsIgnoreCase("")){
-            return 0;
+            return mplayer.getFps();
         }
         else{
             try{

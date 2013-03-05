@@ -48,13 +48,19 @@ public class FrameGrabber {
         skipLength = (long)(1/ (fps /1000));
         long frameNum = 0;
         
-        stop = mplayer.getLength();//Just for testing
-        
-        
-        while(mplayer.getPosition() < .9){
-            frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
-            frameNum++;
-            mplayer.skip(skipLength);
+        if(mplayer.getFps() == fps){
+            while(mplayer.getTime() < stop){
+                frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
+                frameNum++;
+                mplayer.nextFrame();
+            }
+        }
+        else{
+            while(mplayer.getTime() < stop){
+                frames.add(new BufferedWrapper(mplayer.getSnapshot(), frameNum));
+                frameNum++;
+                mplayer.skip(skipLength);
+            }
         }
         
         BufferedWrapper[] outFrames = new BufferedWrapper[frames.size()];
