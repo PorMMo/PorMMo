@@ -3,45 +3,55 @@ package project.senior.app.pormmo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JSlider;
-import uk.co.caprica.vlcj.binding.internal.libvlc_state_t;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * @author John Fisher
  */
-public class PlayerControlPanelSliderMouseListener extends MouseAdapter
+public class PlayerControlPanelSliderMouseListener extends MouseAdapter implements  ChangeListener
 {
 
   private PlayerControlPanel parent;
-
+  private JSlider eventSlider;
+  
   public PlayerControlPanelSliderMouseListener(PlayerControlPanel parent)
   {
     this.parent = parent;
   }
 
   @Override
-  public void mouseReleased(MouseEvent e)
+  public void stateChanged(ChangeEvent e)
   {
-    JSlider eventSource;
-
-    //Process the button mouse activities
-    eventSource = (JSlider) e.getSource();
-
-    switch (eventSource.getName().toLowerCase())
+    if (parent.parent.userSelectingLocation)
     {
-      case "PlayPosition":
-        if (parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Stopped)
-        {
-          parent.mPlayer.playMedia(parent.inputFile.getAbsolutePath());
-        }
-
-        if ((parent.mPlayer.canPause() && parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Playing)
-                || parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Paused)
-        {
-          parent.mPlayer.pause();
-        }
-
-        break;
-
+      parent.mPlayer.setPosition((eventSlider.getValue()) * .01f);
     }
   }
+
+  @Override
+  public void mousePressed(MouseEvent e)
+  {
+
+    eventSlider = (JSlider) e.getSource();
+
+    switch (eventSlider.getName().toLowerCase())
+    {
+      case "pslider":
+        parent.parent.userSelectingLocation = true;
+        break;
+    }
+  }
+
+  @Override
+  public void mouseReleased(MouseEvent e)
+  {
+    switch (eventSlider.getName().toLowerCase())
+    {
+      case "pslider":
+        parent.parent.userSelectingLocation = false;
+        break;
+    }
+  }
+
 }
