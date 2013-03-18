@@ -9,7 +9,9 @@ import javax.swing.event.ChangeListener;
 /**
  * @author John Fisher
  */
-public class PlayerControlPanelSliderMouseListener extends MouseAdapter implements  ChangeListener
+public class PlayerControlPanelSliderMouseListener 
+extends MouseAdapter 
+implements  ChangeListener
 {
 
   private PlayerControlPanel parent;
@@ -22,9 +24,10 @@ public class PlayerControlPanelSliderMouseListener extends MouseAdapter implemen
 
   @Override
   public void stateChanged(ChangeEvent e)
-  {
+  {    
     if (parent.parent.userSelectingLocation)
     {
+      eventSlider = (JSlider) e.getSource();
       parent.mPlayer.setPosition((eventSlider.getValue()) * .01f);
     }
   }
@@ -32,26 +35,13 @@ public class PlayerControlPanelSliderMouseListener extends MouseAdapter implemen
   @Override
   public void mousePressed(MouseEvent e)
   {
-
-    eventSlider = (JSlider) e.getSource();
-
-    switch (eventSlider.getName().toLowerCase())
-    {
-      case "pslider":
-        parent.parent.userSelectingLocation = true;
-        break;
-    }
+    parent.parent.userSelectingLocation = true;
   }
 
   @Override
   public void mouseReleased(MouseEvent e)
   {
-    switch (eventSlider.getName().toLowerCase())
-    {
-      case "pslider":
-        parent.parent.userSelectingLocation = false;
-        break;
-    }
+    parent.parent.userSelectingLocation = false;
   }
 
 }

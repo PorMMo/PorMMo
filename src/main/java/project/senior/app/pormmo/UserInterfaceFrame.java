@@ -19,8 +19,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
@@ -137,7 +135,7 @@ public class UserInterfaceFrame extends JFrame
     pcp.AddJButton("Snapshot", 4, 0, 1);
     pcp.AddJButton("Save", 5, 0, 1);
     pcp.AddJButton("Reset Image", 6, 0, 1);
-    pcp.AddJSlider(0, 1, 7);
+    pcp.AddJSlider("PlayPosition", 0, 1, 7);
   }
 
   /**

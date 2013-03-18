@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -40,6 +41,7 @@ public class PlayerControlPanel extends JPanel
   private MediaPlayerFactory mPlayerFactory;
   protected BufferedImage lastSnapshot;
   protected UserInterfaceFrame parent;
+  protected PlayerEventListener pel;
 
   public PlayerControlPanel(UserInterfaceFrame parent, MediaPlayer mPlayer)
   {
@@ -56,7 +58,7 @@ public class PlayerControlPanel extends JPanel
     panelButtons = new ArrayList<>();
     panelSliders = new ArrayList<>();
     panelNames = new ArrayList<>();
-    
+
     inputFile = null;
     pcpbml = new PlayerControlPanelButtonMouseListener(this);
     pcpsml = new PlayerControlPanelSliderMouseListener(this);
@@ -77,6 +79,8 @@ public class PlayerControlPanel extends JPanel
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     playerFrame.setContentPane(mediaPlayerComponent);
     mPlayer = mediaPlayerComponent.getMediaPlayer();
+    pel = new PlayerEventListener(this, mPlayer);
+    mPlayer.addMediaPlayerEventListener(pel);
   }
 
   public void SetInputFile(File inputFile)
@@ -106,12 +110,9 @@ public class PlayerControlPanel extends JPanel
   {
     parent.processSnapshot(givenImage);
   }
-  
+
   public void AddJButton(
-          String buttonText
-          , int gridXPosition
-          , int gridYPosition
-          , int HorizontalGridSpan)
+          String buttonText, int gridXPosition, int gridYPosition, int HorizontalGridSpan)
   {
     CustomJButton newButton = new CustomJButton(
             buttonText, gridXPosition, gridYPosition, HorizontalGridSpan, pcpbml);
@@ -124,16 +125,11 @@ public class PlayerControlPanel extends JPanel
   }
 
   public void AddJSlider(
-          int gridXPosition
-          , int gridYPosition
-          , int HorizontalGridSpan)
+          String sliderName, int gridXPosition, int gridYPosition, int HorizontalGridSpan)
   {
     CustomJSlider newSlider = new CustomJSlider(
-            "PlayPosition"
-            , gridXPosition
-            , gridYPosition
-            , HorizontalGridSpan
-            , pcpsml);
+            sliderName, gridXPosition, gridYPosition, HorizontalGridSpan, pcpsml);
+    newSlider.setValue(0);
     panelNames.add(newSlider.GetSliderName());
     gbc.gridx = gridXPosition;
     gbc.gridy = gridYPosition;
@@ -160,6 +156,24 @@ public class PlayerControlPanel extends JPanel
     return null;
   }
 
+  public JSlider FindSliderByName(String sliderName)
+  {
+    JSlider currentSlider = null;
+
+    for (int i = 0; i < panelSliders.size(); i++)
+    {
+      currentSlider = panelSliders.get(i);
+
+      if (currentSlider != null
+              && currentSlider.getName().toLowerCase().equals(sliderName.toLowerCase()))
+      {
+        return currentSlider;
+      }
+    }
+
+    return null;
+  }
+  
 //  private class ButtonListener extends MouseAdapter
 //  {
 //
@@ -242,6 +256,7 @@ public class PlayerControlPanel extends JPanel
 //      //Code here
 //    }
 //  }
+
   private class SliderListener extends MouseAdapter
   {
 

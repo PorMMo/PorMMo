@@ -18,6 +18,7 @@ public class CustomJSlider extends JSlider
   {
     setName(sliderName.toLowerCase().replace(" ", ""));
     addMouseListener(sliderListener);
+    addChangeListener(sliderListener);
     this.gridXPosition = gridXPosition;
     this.gridYPosition = gridYPosition;
     this.hGridSpan = hGridSpan;
