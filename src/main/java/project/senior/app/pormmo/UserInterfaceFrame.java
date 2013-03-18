@@ -13,16 +13,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
@@ -43,8 +39,7 @@ public class UserInterfaceFrame extends JFrame
   private String fileDirectory;
   private MediaPlayer mPlayer;
   private JSlider posSlider;
-  private boolean userSelectingLocation = false;
-  private MediaControlsSliderListener mcl;
+  protected boolean userSelectingLocation = false;
   private GSR gSR;
   private BufferedWrapper BW;
   private Dimension screenSize;
@@ -65,7 +60,9 @@ public class UserInterfaceFrame extends JFrame
     screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     setTitle("PorMMo");
-    setPreferredSize(new Dimension((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() - 50));
+    setPreferredSize(
+            new Dimension((int) screenSize.getWidth() / 2
+            , (int) screenSize.getHeight() - 50));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     this.addComponentListener(new FrameListener());
@@ -138,7 +135,7 @@ public class UserInterfaceFrame extends JFrame
     pcp.AddJButton("Snapshot", 4, 0, 1);
     pcp.AddJButton("Save", 5, 0, 1);
     pcp.AddJButton("Reset Image", 6, 0, 1);
-    pcp.AddJSlider(0, 1, 7);
+    pcp.AddJSlider("PlayPosition", 0, 1, 7);
   }
 
   /**
@@ -247,46 +244,6 @@ public class UserInterfaceFrame extends JFrame
       outputPanel.DrawBufferedImage(givenSnapshot);
       outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - pcp.getHeight()));
       hsbPanel.setImage(givenSnapshot);
-    }
-  }
-
-  private class MediaControlsSliderListener extends MouseAdapter implements ChangeListener
-  {
-
-    JSlider sliderOfInteraction;
-
-    @Override
-    public void stateChanged(ChangeEvent e)
-    {
-      if (userSelectingLocation)
-      {
-        mPlayer.setPosition((posSlider.getValue()) * .01f);
-      }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e)
-    {
-
-      sliderOfInteraction = (JSlider) e.getSource();
-
-      switch (sliderOfInteraction.getName().toLowerCase())
-      {
-        case "pslider":
-          userSelectingLocation = true;
-          break;
-      }
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e)
-    {
-      switch (sliderOfInteraction.getName().toLowerCase())
-      {
-        case "pslider":
-          userSelectingLocation = false;
-          break;
-      }
     }
   }
 

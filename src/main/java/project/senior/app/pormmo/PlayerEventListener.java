@@ -36,37 +36,34 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
     @Override
     public void playing(MediaPlayer mp)
     {
-      parent.FindButtonByName("Play").setText("Pause");
     }
 
     @Override
     public void paused(MediaPlayer mp)
     {
-      parent.FindButtonByName("Play").setText("Play");
     }
 
     @Override
     public void stopped(MediaPlayer mp)
     {
-//      playPauseButton.setText("Play");
     }
 
     @Override
     public void forward(MediaPlayer mp)
     {
-//      posSlider.setValue((int) (mPlayer.getPosition() * 100));
     }
 
     @Override
     public void backward(MediaPlayer mp)
     {
-//      posSlider.setValue((int) (mPlayer.getPosition() * 100));
     }
 
     @Override
     public void finished(MediaPlayer mp)
     {
       mPlayer.stop();
+      parent.FindSliderByName("PlayPosition").setValue(0);
+      parent.FindButtonByName("Play").setText("Play");
     }
 
     @Override
@@ -77,10 +74,10 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
     @Override
     public void positionChanged(MediaPlayer mp, float f)
     {
-//      if (!userSelectingLocation)
-//      {
-//        posSlider.setValue((int) (mPlayer.getPosition() * 100));
-//      }
+      if (!parent.parent.userSelectingLocation)
+      {
+        parent.FindSliderByName("PlayPosition").setValue((int) (mPlayer.getPosition() * 100));
+      }
     }
 
     @Override
