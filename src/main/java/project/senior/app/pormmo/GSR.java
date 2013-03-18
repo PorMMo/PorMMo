@@ -7,6 +7,9 @@
 //==============================================================================
 package project.senior.app.pormmo;
 
+//:TODO -> Possibly add a control for allowing a non-removal of a certain G lvl.
+//----Help to not remove gray/black.
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -20,6 +23,7 @@ public class GSR
 {
   public final float GREEN = 0.33f;
   public final float BLUE = 0.66f;
+  private final Color TRANSPARENT = new Color(0,0,0,0);
   //Possible add more colours?
 
   /**
@@ -109,24 +113,24 @@ public class GSR
    * @param Ratio The ratio of Green to : Blue/Red.
    * @return Image with most/all green removed.
    */
-  public BufferedImage RemoveGreen_3(BufferedImage before, float Ratio)
+  public void RemoveGreen_3(BufferedWrapper before, float Ratio)
   {
-    BufferedImage picture = before.getSubimage(0, 0, before.getWidth(),
-            before.getHeight());
     BufferedWrapper bw = new BufferedWrapper();
-    bw.img = BufferedWrapper.CloneImg(picture);
+    bw.img = BufferedWrapper.CloneImg(before.img);
     
     Filters.GaussianBlurStatic(bw); 
     Filters.MeanBlurStatic(bw);
+    Filters.GaussianBlurStatic(bw);
     Filters.GaussianBlurStatic(bw);
     
     Color c;
     int r, g, b;
     float ratio = Ratio;
+    Color a = new Color(4);
 
-    for (int i = 0; i < picture.getWidth(); i++)
+    for (int i = 0; i < bw.img.getWidth(); i++)
     {
-      for (int j = 0; j < picture.getHeight(); j++)
+      for (int j = 0; j < bw.img.getHeight(); j++)
       {
         c = new Color(bw.img.getRGB(i, j));
         r = c.getRed();
@@ -137,26 +141,69 @@ public class GSR
         g += 1;//:Lenient
         if (g >= r && g >= b)
         {
-          bw.img.setRGB(i, j, Color.TRANSLUCENT);
+          if(g > 100)//:dont remove black
+            bw.img.setRGB(i, j, Color.GREEN.getRGB());
         }
       }
-    }
+    }   
     
-    
-    for (int i = 0; i < picture.getWidth(); i++)
+    for (int i = 0; i < before.img.getWidth(); i++)
     {
-      for (int j = 0; j < picture.getHeight(); j++)
+      for (int j = 0; j < before.img.getHeight(); j++)
       {
           c = new Color(bw.img.getRGB(i, j));
           
-          if(c.getRGB() == Color.TRANSLUCENT)
+          if(c.getRGB() == Color.GREEN.getRGB())
           {
-             picture.setRGB(i, j, Color.TRANSLUCENT); 
+             before.img.setRGB(i, j, TRANSPARENT.getRGB()); 
           }
       }
     }
-    
-    return picture;
+
+    //::Was thinking about possible alpha composite for translucent
+//    Graphics gr = before.img.getGraphics();
+//    
+//    if(gr instanceof Graphics2D)
+//    {
+//      Graphics2D g2d = (Graphics2D)gr;
+//      g2d.setBackground(new Color(0,0,0));
+//      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+//    }
+  }
+  
+  /**
+   * This method relies on a ratio of green to red/blue as per suggestion by
+   * Fish.
+   *
+   * @param before BufferedImage containing green background.
+   * @param Ratio The ratio of Green to : Blue/Red.
+   * @return Image with most/all green removed.
+   */
+  public void RemoveGreen_2(BufferedWrapper before, float Ratio)
+  { 
+    Color c;
+    int r, g, b;
+    float ratio = Ratio;
+    Color a = new Color(4);
+
+    for (int i = 0; i < before.img.getWidth(); i++)
+    {
+      for (int j = 0; j < before.img.getHeight(); j++)
+      {
+        c = new Color(before.img.getRGB(i, j));
+        r = c.getRed();
+        b = c.getBlue();
+        g = c.getGreen();
+
+        g = (int) (g * ratio);
+        g += 1;//:Lenient
+        if (g >= r && g >= b)
+        {
+          if(g > 100)//:dont remove black
+           before.img.setRGB(i, j, Color.TRANSLUCENT);
+        }
+      }
+    }
   }
 
   /**

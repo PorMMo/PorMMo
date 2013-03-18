@@ -17,12 +17,14 @@ import javax.swing.event.ChangeListener;
 public class TolerancePanel extends JPanel
 {
   private JSlider tolerance;
+  private BufferedWrapper bw;
   private GSR gsr;
   private OutputPanel main;
   private float T;
   
   public TolerancePanel(OutputPanel op)
   {
+    bw = new BufferedWrapper();
     main = op;
     gsr = new GSR();
     initPanel();
@@ -73,7 +75,7 @@ public class TolerancePanel extends JPanel
     
     gbc.gridx = 0;
     gbc.gridy = 3;
-    JButton apply = new JButton("Apply");
+    JButton apply = new JButton("Apply Pre Blurs");
     apply.setSize(75,40);
     apply.addActionListener(new ActionListener()
     {
@@ -82,11 +84,32 @@ public class TolerancePanel extends JPanel
       {
         if(main.IsReady())
         {
-          main.ReDrawBufferedImage(T, gsr.GREEN);
+          bw.img = main.GetLatestBI();
+          gsr.RemoveGreen_3(bw, T);
+          main.DrawBufferedImage(bw.img);
         }
       }
     });
     inner.add(apply, gbc);
+    
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    JButton apply2 = new JButton("Apply Post Blur");
+    apply2.setSize(75,40);
+    apply2.addActionListener(new ActionListener()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        if(main.IsReady())
+        {
+          bw.img = main.GetLatestBI();
+          gsr.RemoveGreen_2(bw, T);
+          main.DrawBufferedImage(bw.img);
+        }
+      }
+    });
+    inner.add(apply2, gbc);
     
     add(inner);
   }

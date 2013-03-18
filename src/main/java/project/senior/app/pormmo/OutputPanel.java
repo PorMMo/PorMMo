@@ -140,25 +140,16 @@ public class OutputPanel extends JPanel
   }
 
   public void DrawBufferedImage(BufferedImage bi)
-  {
+  { 
     if (bi != null)
     {
       this.bi = bi;
-
+      
       setSize(new Dimension(bi.getWidth(), bi.getHeight()));
       setMinimumSize(new Dimension(bi.getWidth(), bi.getHeight()));
 
       this.repaint();
       this.validate();
-    }
-  }
-
-  public void ReDrawBufferedImage(float T, float H)
-  {
-    if (bi != null)
-    {
-      bi = gSR.RemoveGreen_3(bi, T);//, H);
-      this.repaint();
     }
   }
 
