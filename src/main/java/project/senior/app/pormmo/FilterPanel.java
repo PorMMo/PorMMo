@@ -13,9 +13,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -25,12 +22,14 @@ public class FilterPanel extends JPanel
 {
   private BufferedWrapper bw;
   private OutputPanel main;
+  private UserInterfaceFrame parent;  
   private HSBPanel hp;
   
-  public FilterPanel(OutputPanel op, HSBPanel h)
+  public FilterPanel(UserInterfaceFrame parent)
   {
-    hp = h;
-    main = op;
+    this.parent = parent;
+    hp = parent.hsbPanel;
+    main = parent.outputPanel;
     bw = new BufferedWrapper();
     initPanel();
     initControls();
@@ -68,9 +67,10 @@ public class FilterPanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        bw.img = main.GetLatestBI();
+        bw.img = parent.ic.getCurrentlyDisplayImage();
         Filters.GrayScaleStatic(bw);
-        main.DrawBufferedImage(bw.img);
+        parent.ic.setCurrentlyDisplayImage(bw.img);
+        main.ReDrawOutputPanel();
       }
     });
     inner.add(grays, gbc);
@@ -84,9 +84,10 @@ public class FilterPanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        bw.img = main.GetLatestBI();
+        bw.img = parent.ic.getCurrentlyDisplayImage();
         Filters.MeanBlurStatic(bw);
-        main.DrawBufferedImage(bw.img);
+        parent.ic.setCurrentlyDisplayImage(bw.img);
+        main.ReDrawOutputPanel();
       }
     });
     inner.add(mean, gbc);
@@ -100,9 +101,10 @@ public class FilterPanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        bw.img = main.GetLatestBI();
+        bw.img = parent.ic.getCurrentlyDisplayImage();
         Filters.MedianBlurStatic(bw);
-        main.DrawBufferedImage(bw.img);
+        parent.ic.setCurrentlyDisplayImage(bw.img);
+        main.ReDrawOutputPanel();
       }
     });
     inner.add(median, gbc);
@@ -116,9 +118,10 @@ public class FilterPanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        bw.img = main.GetLatestBI();
+        bw.img = parent.ic.getCurrentlyDisplayImage();
         Filters.GaussianBlurStatic(bw);
-        main.DrawBufferedImage(bw.img);
+        parent.ic.setCurrentlyDisplayImage(bw.img);
+        main.ReDrawOutputPanel();
       }
     });
     inner.add(gaussian, gbc);

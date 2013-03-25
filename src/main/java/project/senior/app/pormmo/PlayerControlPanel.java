@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ public class PlayerControlPanel extends JPanel
   private ArrayList<CustomJButton> panelButtons;
   private ArrayList<CustomJSlider> panelSliders;
   private ArrayList<String> panelNames;
-  protected MediaPlayer mPlayer;
   protected File inputFile;
   private PlayerControlPanelButtonMouseListener pcpbml;
   private PlayerControlPanelSliderMouseListener pcpsml;
@@ -39,7 +36,6 @@ public class PlayerControlPanel extends JPanel
   private EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private Dimension screenSize;
   private MediaPlayerFactory mPlayerFactory;
-  protected BufferedImage lastSnapshot;
   protected UserInterfaceFrame parent;
   protected PlayerEventListener pel;
 
@@ -51,7 +47,6 @@ public class PlayerControlPanel extends JPanel
     setLayout(layout);
 
     screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    this.mPlayer = mPlayer;
 
     this.parent = parent;
 
@@ -78,9 +73,9 @@ public class PlayerControlPanel extends JPanel
 
     mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
     playerFrame.setContentPane(mediaPlayerComponent);
-    mPlayer = mediaPlayerComponent.getMediaPlayer();
-    pel = new PlayerEventListener(this, mPlayer);
-    mPlayer.addMediaPlayerEventListener(pel);
+    parent.mPlayer = mediaPlayerComponent.getMediaPlayer();
+    pel = new PlayerEventListener(this, parent.mPlayer);
+    parent.mPlayer.addMediaPlayerEventListener(pel);
   }
 
   public void SetInputFile(File inputFile)
@@ -93,7 +88,7 @@ public class PlayerControlPanel extends JPanel
             playMedia(inputFile.getAbsolutePath());
     mediaPlayerComponent.
             getMediaPlayer().
-            addMediaPlayerEventListener(new PlayerEventListener(this, mPlayer));
+            addMediaPlayerEventListener(new PlayerEventListener(this, parent.mPlayer));
   }
 
   public File GetInputFile()
@@ -103,12 +98,13 @@ public class PlayerControlPanel extends JPanel
 
   public BufferedImage GetLastSnapshot()
   {
-    return lastSnapshot;
+    return parent.ic.getLastSnapshot();
   }
 
   public void DisplayLastSnapshot(BufferedImage givenImage)
   {
-    parent.processSnapshot(givenImage);
+    //parent.processSnapshot(givenImage);
+    parent.ic.setCurrentlyDisplayImage(parent.ic.getLastSnapshot());
   }
 
   public void AddJButton(

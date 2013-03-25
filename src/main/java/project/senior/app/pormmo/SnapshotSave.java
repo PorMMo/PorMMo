@@ -10,31 +10,39 @@ import javax.swing.JOptionPane;
 /**
  * @author John Fisher
  */
-public class SnapshotSave extends JFileChooser {
-    
-    private BufferedImage fileToSave;
-    private File fileHandle;
-    
-    public SnapshotSave(BufferedImage fileToSave)
+public class SnapshotSave extends JFileChooser
+{
+
+  private BufferedImage fileToSave;
+  private File fileHandle;
+
+  public SnapshotSave(BufferedImage fileToSave)
+  {
+    this.fileToSave = fileToSave;
+    this.fileHandle = null;
+    saveFile();
+  }
+
+  private void saveFile()
+  {
+    showFileChooser();
+  }
+
+  public void showFileChooser()
+  {
+    showSaveDialog(this);
+    fileHandle = getSelectedFile();
+
+    if (fileHandle != null)
     {
-        this.fileToSave = fileToSave;
-        this.fileHandle = null;
-        saveFile();
+      try
+      {
+        ImageIO.write(fileToSave, "png", fileHandle);
+      }
+      catch (IOException ex)
+      {
+        JOptionPane.showMessageDialog(this, "Error saving image!");
+      }
     }
-    
-    private void saveFile()
-    {
-        showFileChooser();
-    }
-    
-    public void showFileChooser(){        
-        showSaveDialog(this);
-        fileHandle = getSelectedFile();
-        try {
-            ImageIO.write(fileToSave, "png", fileHandle);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error saving image!");
-        }
-        
-    }
+  }
 }

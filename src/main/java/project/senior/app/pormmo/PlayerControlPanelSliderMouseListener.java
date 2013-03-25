@@ -28,7 +28,7 @@ implements  ChangeListener
     if (parent.parent.userSelectingLocation)
     {
       eventSlider = (JSlider) e.getSource();
-      parent.mPlayer.setPosition((eventSlider.getValue()) * .01f);
+      parent.parent.mPlayer.setPosition((eventSlider.getValue()) * .01f);
     }
   }
 

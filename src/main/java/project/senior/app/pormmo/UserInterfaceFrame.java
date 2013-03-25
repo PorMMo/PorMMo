@@ -18,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
@@ -29,20 +28,20 @@ public class UserInterfaceFrame extends JFrame
 
   public float TOLERANCE;
   private ScrollPane tPane;
-  private HSBPanel hsbPanel;
-  private OutputPanel outputPanel;
+  protected HSBPanel hsbPanel;
+  protected OutputPanel outputPanel;
   private File selectedInputFile = null;
   private PlayerControlPanel pcp;
   private ScrollPane sPane;
   private JFrame me;
   protected BufferedImage snapshot, displayShot;
   private String fileDirectory;
-  private MediaPlayer mPlayer;
-  private JSlider posSlider;
+  protected MediaPlayer mPlayer;
   protected boolean userSelectingLocation = false;
   private GSR gSR;
   private BufferedWrapper BW;
   private Dimension screenSize;
+  protected ImageContainer ic;
 
   public UserInterfaceFrame()
   {
@@ -79,7 +78,7 @@ public class UserInterfaceFrame extends JFrame
   private void initDisplay()
   {
     JPanel[] tools = new JPanel[4];
-    hsbPanel = new HSBPanel(null, outputPanel);
+    hsbPanel = new HSBPanel(this);
     hsbPanel.setPreferredSize(new Dimension(100, 200));
     tools[0] = hsbPanel;
 
@@ -87,7 +86,7 @@ public class UserInterfaceFrame extends JFrame
     tp.setMinimumSize(new Dimension(100, 100));
     tools[1] = tp;
 
-    FilterPanel fp = new FilterPanel(outputPanel, hsbPanel);
+    FilterPanel fp = new FilterPanel(this);
     fp.setMinimumSize(new Dimension(100, 200));
     tools[2] = fp;
 
@@ -120,12 +119,13 @@ public class UserInterfaceFrame extends JFrame
 
   private void initOutputPanel()
   {
-    outputPanel = new OutputPanel();
+    outputPanel = new OutputPanel(this);
     outputPanel.setPreferredSize(new Dimension(500, 500));
   }
 
   private void initControlPanel()
   {
+    ic = new ImageContainer();
     pcp = new PlayerControlPanel(this, mPlayer);
 
     pcp.AddJButton("Play", 0, 0, 1);
@@ -237,15 +237,15 @@ public class UserInterfaceFrame extends JFrame
     }
   }
 
-  public void processSnapshot(BufferedImage givenSnapshot)
-  {
-    if (givenSnapshot != null)
-    {
-      outputPanel.DrawBufferedImage(givenSnapshot);
-      outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - pcp.getHeight()));
-      hsbPanel.setImage(givenSnapshot);
-    }
-  }
+//  public void processSnapshot(BufferedImage givenSnapshot)
+//  {
+//    if (givenSnapshot != null)
+//    {
+//      outputPanel.DrawBufferedImage(givenSnapshot);
+//      outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - pcp.getHeight()));
+//      hsbPanel.setImage(givenSnapshot);
+//    }
+//  }
 
   private class UserInterfaceFrameMenuListener extends MouseAdapter
   {

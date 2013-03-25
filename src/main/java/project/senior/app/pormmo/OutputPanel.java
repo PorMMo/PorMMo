@@ -21,11 +21,12 @@ import javax.swing.JPanel;
 public class OutputPanel extends JPanel
 {
 
-  private BufferedImage bi;
+//  private BufferedImage bi;
   public GSR gSR;
   private BorderLayout bLayout;
   private boolean isCropping = false;
   private Point startCropPoint, stopCropPoint;
+  private UserInterfaceFrame parent;
 
   public OutputPanel()
   {
@@ -34,10 +35,20 @@ public class OutputPanel extends JPanel
     setLayout(bLayout);
     setControls();
   }
-  
+
+  public OutputPanel(UserInterfaceFrame parent)
+  {
+    gSR = new GSR();
+    bLayout = new BorderLayout();
+    setLayout(bLayout);
+    setControls();
+
+    this.parent = parent;
+  }
+
   public BufferedImage GetLatestBI()
   {
-    return bi;
+    return parent.ic.getCurrentlyDisplayImage();
   }
 
   private void setControls()
@@ -49,8 +60,11 @@ public class OutputPanel extends JPanel
         @Override
         public void mousePressed(MouseEvent e)
         {
-          if(!IsReady()) return;
-          
+          if (!IsReady())
+          {
+            return;
+          }
+
           isCropping = true;
           startCropPoint = e.getPoint();
         }
@@ -58,7 +72,10 @@ public class OutputPanel extends JPanel
         @Override
         public void mouseReleased(MouseEvent e)
         {
-          if(!IsReady()) return;
+          if (!IsReady())
+          {
+            return;
+          }
           isCropping = false;
           stopCropPoint = e.getPoint();
 
@@ -82,7 +99,6 @@ public class OutputPanel extends JPanel
           {
             return;
           }
-          
 
           stopCropPoint = e.getPoint();
           repaint();
@@ -114,16 +130,20 @@ public class OutputPanel extends JPanel
 
   public void Crop()
   {
-    BufferedImage temp = new BufferedImage(stopCropPoint.x - startCropPoint.x, stopCropPoint.y - startCropPoint.y, bi.getType());
-
+    BufferedImage temp = new BufferedImage(stopCropPoint.x - startCropPoint.x, stopCropPoint.y - startCropPoint.y, parent.ic.getCurrentlyDisplayImage().getType());
+    BufferedImage currentDisplay = parent.ic.getCurrentlyDisplayImage();
+    
     int w = stopCropPoint.x - startCropPoint.x;
     int h = stopCropPoint.y - startCropPoint.y;
 
+    if(w>currentDisplay.getWidth()) w=currentDisplay.getWidth();
+    if(h>currentDisplay.getHeight()) h=currentDisplay.getHeight();
+    
     for (int i = 0; i < w; i++)
     {
       for (int j = 0; j < h; j++)
       {
-        temp.setRGB(i, j, bi.getRGB(startCropPoint.x + i, startCropPoint.y + j));
+        temp.setRGB(i, j, currentDisplay.getRGB(startCropPoint.x + i, startCropPoint.y + j));
       }
     }
 
@@ -132,21 +152,28 @@ public class OutputPanel extends JPanel
 
     if (response == JOptionPane.OK_OPTION)
     {
-      bi = temp;
+      parent.ic.setCurrentlyDisplayImage(temp);
+      
       repaint();
       setSize(w, h);
     }
 
   }
 
+  public void ReDrawOutputPanel()
+  {
+    this.setSize(new Dimension(parent.ic.getCurrentDisplayImageDimension()));
+    repaint();
+  }
+
   public void DrawBufferedImage(BufferedImage bi)
-  { 
+  {
     if (bi != null)
     {
-      this.bi = bi;
-      
-      setSize(new Dimension(bi.getWidth(), bi.getHeight()));
-      setMinimumSize(new Dimension(bi.getWidth(), bi.getHeight()));
+      parent.ic.setCurrentlyDisplayImage(bi);
+
+      setSize(parent.ic.getCurrentDisplayImageDimension());
+      setMinimumSize(parent.ic.getCurrentDisplayImageDimension());
 
       this.repaint();
       this.validate();
@@ -155,7 +182,7 @@ public class OutputPanel extends JPanel
 
   public boolean IsReady()
   {
-    return bi != null;
+    return parent.ic.getCurrentlyDisplayImage() != null;
   }
 
   @Override
@@ -165,17 +192,17 @@ public class OutputPanel extends JPanel
 
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     page.clearRect(0, 0, this.getWidth(), this.getHeight());
-    page.drawImage(bi, 0, 0, this);
 
-    if (bi != null)
+    if (parent.ic.getCurrentlyDisplayImage() != null)
     {
+      page.drawImage(parent.ic.getCurrentlyDisplayImage(), 0, 0, this);
       page.setColor(Color.red);
       if (isCropping)
       {
-        page.drawRect(((startCropPoint.x > stopCropPoint.x) ? stopCropPoint.x : startCropPoint.x), 
-                       ((startCropPoint.y > stopCropPoint.y) ? stopCropPoint.y : startCropPoint.y), 
-                         Math.abs(stopCropPoint.x - startCropPoint.x), 
-                           Math.abs(stopCropPoint.y - startCropPoint.y));
+        page.drawRect(((startCropPoint.x > stopCropPoint.x) ? stopCropPoint.x : startCropPoint.x),
+                ((startCropPoint.y > stopCropPoint.y) ? stopCropPoint.y : startCropPoint.y),
+                Math.abs(stopCropPoint.x - startCropPoint.x),
+                Math.abs(stopCropPoint.y - startCropPoint.y));
       }
     }
   }

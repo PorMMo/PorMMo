@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,31 +19,29 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * 
+ *
  * @author Shelby Copeland, John Fisher
  */
 public class HSBPanel extends JPanel
 {
 
-  private BufferedImage bi, bi2;
+  private BufferedImage bi;
+  private BufferedImage bi2;
   private BorderLayout bl;
   private JPanel controlPanel;
   private OutputPanel oPanel;
   private JButton applyBtn;
   private JPanel me;
-  private JSlider saturationSlider, hueSlider, brightnessSlider;
+  private JSlider saturationSlider, brightnessSlider;
+  private UserInterfaceFrame parent;
+  private BufferedImage localBackup;
+  private boolean intraStateBackup = false;
 
-  public HSBPanel(BufferedImage bi, OutputPanel oPanel)
+  public HSBPanel(UserInterfaceFrame parent)
   {
-    this.bi = bi;
-    this.oPanel = oPanel;
+    this.parent = parent;
 
     initPanel();
-  }
-
-  public void setImage(BufferedImage bi)
-  {
-    this.bi = bi;
   }
 
   private void initPanel()
@@ -52,11 +51,14 @@ public class HSBPanel extends JPanel
     setLayout(bl);
     initControls();
   }
-  
+
   public void Reset(BufferedWrapper bw)
   {
-    bi2 = null;
-    bi = bw.Clone();
+    if(intraStateBackup){
+      bi2 = null;
+      parent.ic.restoreCurrentDisplayImage();
+      parent.outputPanel.ReDrawOutputPanel();
+    }
   }
 
   private void initControls()
@@ -70,26 +72,10 @@ public class HSBPanel extends JPanel
 
     gBC.gridx = 0;
     gBC.gridy = 0;
-    controlPanel.add(new JLabel("Hue"), gBC);
-
-    gBC.gridx = 0;
-    gBC.gridy = 1;
-    hueSlider = new JSlider();
-    hueSlider.setName("hue");
-    hueSlider.setMinimum(-1000);
-    hueSlider.setMaximum(1000);
-    hueSlider.setSnapToTicks(true);
-    hueSlider.setMajorTickSpacing(100);
-    hueSlider.setValue(0);
-    hueSlider.addChangeListener(new SliderListener());
-    controlPanel.add(hueSlider, gBC);
-
-    gBC.gridx = 0;
-    gBC.gridy = 2;
     controlPanel.add(new JLabel("Saturation"), gBC);
 
     gBC.gridx = 0;
-    gBC.gridy = 3;
+    gBC.gridy = 1;
     saturationSlider = new JSlider();
     saturationSlider.setName("saturation");
     saturationSlider.setMinimum(-1000);
@@ -97,15 +83,17 @@ public class HSBPanel extends JPanel
     saturationSlider.setSnapToTicks(true);
     saturationSlider.setMajorTickSpacing(100);
     saturationSlider.setValue(0);
-    saturationSlider.addChangeListener(new SliderListener());
+    SliderListener ssl = new SliderListener();
+    saturationSlider.addChangeListener(ssl);
+    saturationSlider.addMouseListener(ssl);
     controlPanel.add(saturationSlider, gBC);
 
     gBC.gridx = 0;
-    gBC.gridy = 4;
+    gBC.gridy = 3;
     controlPanel.add(new JLabel("Brightness"), gBC);
 
     gBC.gridx = 0;
-    gBC.gridy = 5;
+    gBC.gridy = 4;
     brightnessSlider = new JSlider();
     brightnessSlider.setName("brightness");
     brightnessSlider.setMinimum(-1000);
@@ -113,15 +101,17 @@ public class HSBPanel extends JPanel
     brightnessSlider.setValue(0);
     brightnessSlider.setSnapToTicks(true);
     brightnessSlider.setMajorTickSpacing(100);
-    brightnessSlider.addChangeListener(new SliderListener());
+    SliderListener bsl = new SliderListener();
+    brightnessSlider.addChangeListener(bsl);
+    brightnessSlider.addMouseListener(bsl);
     controlPanel.add(brightnessSlider, gBC);
 
     gBC.gridx = 0;
-    gBC.gridy = 6;
+    gBC.gridy = 5;
     controlPanel.add(new JLabel(" "), gBC);
 
     gBC.gridx = 0;
-    gBC.gridy = 7;
+    gBC.gridy = 6;
     applyBtn = new JButton("Apply");
     applyBtn.setName("apply");
     applyBtn.setPreferredSize(new Dimension(75, 40));
@@ -130,18 +120,19 @@ public class HSBPanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (bi2.equals(null))
+        if (parent.ic.getCurrentlyDisplayImage() == null)
         {
           return;
         }
 
-        bi = BufferedWrapper.CloneImg(bi2);
+        parent.ic.backupCurrentDisplayImage();
+        localBackup = parent.ic.getCurrentlyDisplayImage();
+        intraStateBackup = false;
+
         saturationSlider.setValue(0);
         saturationSlider.repaint();
         brightnessSlider.setValue(0);
         brightnessSlider.repaint();
-        hueSlider.setValue(0);
-        hueSlider.repaint();
       }
     });
     controlPanel.add(applyBtn, gBC);
@@ -156,22 +147,6 @@ public class HSBPanel extends JPanel
     add(controlPanel);
   }
 
-  public BufferedImage imageCopy(BufferedImage givenImage)
-  {
-    int iWidth = givenImage.getWidth(), iHeight = givenImage.getHeight();
-    BufferedImage newImage = new BufferedImage(iWidth, iHeight, givenImage.getType());
-
-    for (int x = 0; x < iWidth; x++)
-    {
-      for (int y = 0; y < iHeight; y++)
-      {
-        newImage.setRGB(x, y, givenImage.getRGB(x, y));
-      }
-    }
-
-    return newImage;
-  }
-
   class cButtonListener extends MouseAdapter
   {
 
@@ -179,47 +154,45 @@ public class HSBPanel extends JPanel
     public void mouseReleased(MouseEvent e)
     {
       bi2 = null;
-      oPanel.DrawBufferedImage(bi);
+      parent.ic.restoreCurrentDisplayImage();
+      parent.outputPanel.ReDrawOutputPanel();
       saturationSlider.setValue(0);
       saturationSlider.repaint();
       brightnessSlider.setValue(0);
       brightnessSlider.repaint();
-      hueSlider.setValue(0);
-      hueSlider.repaint();
     }
   }
 
-  class SliderListener implements ChangeListener
-  {   
+  class SliderListener extends MouseAdapter implements ChangeListener
+  {
+
     private Color newColor;
     private float hsbvals[] = new float[3];
     private int currentSliderValue;
-    private float hue, saturation, brightness;
+    private float saturation, brightness;
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+      if (!intraStateBackup)
+      {
+        localBackup = new BufferedImage(
+                parent.ic.getCurrentlyDisplayImage().getWidth(), parent.ic.getCurrentlyDisplayImage().getHeight(), parent.ic.getCurrentlyDisplayImage().getType());
+        localBackup = parent.ic.getCurrentlyDisplayImage().getSubimage(0, 0, parent.ic.getCurrentlyDisplayImage().getWidth(), parent.ic.getCurrentlyDisplayImage().getHeight());
+        intraStateBackup = true;
+      }
+    }
 
     @Override
     public void stateChanged(ChangeEvent e)
     {
-      if(bi.getHeight() != oPanel.GetLatestBI().getHeight())
-      {
-        bi2 = null;
-        bi = oPanel.GetLatestBI();
-      }
-      if(bi.getWidth() != oPanel.GetLatestBI().getWidth())
-      {
-        bi2 = null;
-        bi = oPanel.GetLatestBI();
-      }
-      
-      
+      bi = localBackup;
+      bi2 = new BufferedImage(bi.getWidth(), bi.getHeight(), bi.getType());
+
       JSlider sliderOfInteraction = (JSlider) e.getSource();
 
       me.validate();
       me.repaint();
-
-      if (bi2 == null)
-      {
-        bi2 = imageCopy(bi);
-      }
 
       switch (sliderOfInteraction.getName())
       {
@@ -282,7 +255,8 @@ public class HSBPanel extends JPanel
           break;//:End saturation
       }
 
-      oPanel.DrawBufferedImage(bi2);
+      parent.ic.setCurrentlyDisplayImage(bi2);
+      parent.outputPanel.ReDrawOutputPanel();
     }
   }
 }

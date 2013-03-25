@@ -39,15 +39,15 @@ public class PlayerControlPanelButtonMouseListener extends MouseAdapter
         {
           case "pause":
           case "play":
-            if (parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Stopped)
+            if (parent.parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Stopped)
             {
-              parent.mPlayer.playMedia(parent.inputFile.getAbsolutePath());
+              parent.parent.mPlayer.playMedia(parent.inputFile.getAbsolutePath());
             }
 
-            if ((parent.mPlayer.canPause() && parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Playing)
-                    || parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Paused)
+            if ((parent.parent.mPlayer.canPause() && parent.parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Playing)
+                    || parent.parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Paused)
             {
-              parent.mPlayer.pause();
+              parent.parent.mPlayer.pause();
             }
 
             if (eventSource.getText().equals("Play"))
@@ -62,30 +62,35 @@ public class PlayerControlPanelButtonMouseListener extends MouseAdapter
             break;
 
           case "stop":
-            parent.mPlayer.stop();
+            parent.parent.mPlayer.stop();
             parent.FindButtonByName("Play").setText("Play");
             break;
 
           case "forward":
-            parent.mPlayer.skip(1000);
+            parent.parent.mPlayer.skip(1000);
             break;
 
           case "rewind":
-            parent.mPlayer.skip(-1000);
+            parent.parent.mPlayer.skip(-1000);
             break;
 
           case "save":
-            if (parent.lastSnapshot != null)
+            if (parent.parent.ic.getCurrentlyDisplayImage() != null)
             {
-              SnapshotSave sS = new SnapshotSave(parent.lastSnapshot);
+              SnapshotSave sS = new SnapshotSave(parent.parent.ic.getCurrentlyDisplayImage());
             }
             break;
 
-          case "reset":
+          case "resetimage":
+            parent.parent.ic.backupCurrentDisplayImage();
+            parent.parent.ic.setCurrentlyDisplayImage(parent.parent.ic.getLastSnapshot());
+            parent.parent.outputPanel.ReDrawOutputPanel();
             break;
 
           case "snapshot":
-            parent.DisplayLastSnapshot(parent.mPlayer.getSnapshot());
+            parent.parent.ic.setLastSnapshot(parent.parent.mPlayer.getSnapshot());
+            parent.parent.ic.setCurrentlyDisplayImage(parent.parent.ic.getLastSnapshot());
+            parent.parent.outputPanel.ReDrawOutputPanel();
             break;
 
         }
