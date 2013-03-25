@@ -79,7 +79,7 @@ public class UserInterfaceFrame extends JFrame
   {
     JPanel[] tools = new JPanel[4];
     hsbPanel = new HSBPanel(this);
-    hsbPanel.setPreferredSize(new Dimension(100, 200));
+    hsbPanel.setPreferredSize(new Dimension(100, 150));
     tools[0] = hsbPanel;
 
     TolerancePanel tp = new TolerancePanel(outputPanel);
@@ -94,6 +94,9 @@ public class UserInterfaceFrame extends JFrame
     sep.setMinimumSize(new Dimension(100, 200));
     tools[3] = sep;
 
+//    SequenceGrabber sg = new SequenceGrabber(this);
+//    tools[4] = sg;
+    
     tPane = new ToolsPanel(tools);
 
     sPane = new ScrollPane();

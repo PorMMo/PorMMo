@@ -32,7 +32,7 @@ public class PlayerControlPanel extends JPanel
   protected File inputFile;
   private PlayerControlPanelButtonMouseListener pcpbml;
   private PlayerControlPanelSliderMouseListener pcpsml;
-  private JFrame playerFrame;
+  protected JFrame playerFrame;
   private EmbeddedMediaPlayerComponent mediaPlayerComponent;
   private Dimension screenSize;
   private MediaPlayerFactory mPlayerFactory;
@@ -103,7 +103,6 @@ public class PlayerControlPanel extends JPanel
 
   public void DisplayLastSnapshot(BufferedImage givenImage)
   {
-    //parent.processSnapshot(givenImage);
     parent.ic.setCurrentlyDisplayImage(parent.ic.getLastSnapshot());
   }
 

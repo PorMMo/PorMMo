@@ -39,6 +39,7 @@ public class PlayerControlPanelButtonMouseListener extends MouseAdapter
         {
           case "pause":
           case "play":
+            parent.playerFrame.setVisible(true);
             if (parent.parent.mPlayer.getMediaPlayerState() == libvlc_state_t.libvlc_Stopped)
             {
               parent.parent.mPlayer.playMedia(parent.inputFile.getAbsolutePath());
