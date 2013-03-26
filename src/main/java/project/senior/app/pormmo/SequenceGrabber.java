@@ -134,7 +134,7 @@ public class SequenceGrabber extends JPanel
           break;
         case "End":
           end = mPlayer.getTime();
-          sourceButton.setText("Sequence Start: " + end);
+          sourceButton.setText("Sequence End: " + end);
 
           break;
         case "SaveSequence":
