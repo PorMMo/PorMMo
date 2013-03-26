@@ -31,7 +31,7 @@ public class UserInterfaceFrame extends JFrame
   protected HSBPanel hsbPanel;
   protected OutputPanel outputPanel;
   private File selectedInputFile = null;
-  private PlayerControlPanel pcp;
+  protected PlayerControlPanel pcp;
   private ScrollPane sPane;
   private JFrame me;
   protected BufferedImage snapshot, displayShot;
@@ -90,12 +90,12 @@ public class UserInterfaceFrame extends JFrame
     fp.setMinimumSize(new Dimension(100, 200));
     tools[2] = fp;
 
-    StartEndPanel sep = new StartEndPanel(mPlayer);
-    sep.setMinimumSize(new Dimension(100, 200));
-    tools[3] = sep;
+//    StartEndPanel sep = new StartEndPanel(mPlayer);
+//    sep.setMinimumSize(new Dimension(100, 200));
+//    tools[3] = sep;
 
-//    SequenceGrabber sg = new SequenceGrabber(this);
-//    tools[4] = sg;
+    SequenceGrabber sg = new SequenceGrabber(this);
+    tools[3] = sg;
     
     tPane = new ToolsPanel(tools);
 
