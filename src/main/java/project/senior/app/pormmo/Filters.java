@@ -17,6 +17,9 @@ import java.util.Arrays;
  */
 public class Filters
 {
+  public static final int SixteenBit = 2;
+  public static final int EightBit   = 1;
+  
   //============================================================================
   //====                         Median Blur                                ====
   //============================================================================
@@ -401,5 +404,84 @@ public class Filters
     end = new Color(r/16, g/16, b/16);
     
     return end.getRGB();
+  }
+  
+   //============================================================================
+  //====                            Bit                                     ====
+  //============================================================================
+  /**
+   * A Filter for cartoonizing output. Currently supports: 16 bit.
+   * @param bw BufferedWrapper containing your image.
+   * @param type Filters.SixteenBit || Filters.EightBit
+   */
+  public static void BitFilter(BufferedWrapper bw, int type)
+  {
+    BufferedImage temp = bw.Clone();
+    int w_Squares, h_Squares, s;
+    Color c;
+    
+    switch(type)
+    {
+  //============================================================================
+  //====                          16-Bit                                    ====
+  //============================================================================
+      case SixteenBit:
+        int pixels = temp.getWidth() * temp.getHeight();
+        
+        if(pixels < 1000000)
+          s = 4;
+        else
+          s = 8;
+        
+        w_Squares = temp.getWidth() / s;
+        h_Squares = temp.getHeight() / s;
+        
+        for(int i = 0; i < w_Squares; i++)
+        {
+          for(int j = 0; j < h_Squares; j++)
+          {
+            c = GetColor(temp, i, j, s);
+            
+            for(int k = 0; k < s; k++)
+              for(int m = 0; m < s; m++)
+              {
+                temp.setRGB((i * s) + k, (j * s) + m, c.getRGB());
+              }
+          }
+        }
+        
+        bw.img = temp;
+        break;
+        
+  //============================================================================
+  //====                          8-Bit                                     ====
+  //============================================================================
+      case EightBit:
+        break;
+    }
+  }
+  
+  private static Color GetColor(BufferedImage temp, int W, int H, int s)
+  {
+    int r = 0, g = 0, b = 0;
+    Color c;
+    
+    for(int i = W * s; i < (W * s) + s; i++)
+      for(int j = H * s; j < (H * s) + s; j++)
+      {
+        c = new Color(temp.getRGB(i, j));
+        
+        r += c.getRed();
+        g += c.getGreen();
+        b += c.getBlue();
+      }
+    
+    r = r / (s*s);
+    g = g / (s*s);
+    b = b / (s*s);
+    
+    c = new Color(r, g, b);
+    
+    return c;
   }
 }

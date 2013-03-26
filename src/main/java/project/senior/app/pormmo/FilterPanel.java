@@ -125,9 +125,28 @@ public class FilterPanel extends JPanel
       }
     });
     inner.add(gaussian, gbc);
+    
     //--------------------------------------------------------------------------
     gbc.gridx = 0;
     gbc.gridy = 6;
+    JButton sbit = new JButton("Pseudo 16-Bit");
+    sbit.setSize(75,40);
+    sbit.addActionListener(new ActionListener()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        bw.img = parent.ic.getCurrentlyDisplayImage();
+        Filters.BitFilter(bw, Filters.SixteenBit);
+        parent.ic.setCurrentlyDisplayImage(bw.img);
+        main.ReDrawOutputPanel();
+      }
+    });
+    inner.add(sbit, gbc);
+    
+    //--------------------------------------------------------------------------
+    gbc.gridx = 0;
+    gbc.gridy = 7;
     JButton apply = new JButton("Apply Changes");
     apply.setSize(75,40);
     apply.addActionListener(new ActionListener()
