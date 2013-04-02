@@ -8,6 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -22,7 +25,9 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
  */
 public class SequenceGrabber extends JPanel
 {
-
+  
+    private Timer snapshotTimer;
+    private OutputProcessing op;
   private UserInterfaceFrame parent;
   private MediaPlayer mPlayer;
   private long start = 0, end = 0;
@@ -34,7 +39,8 @@ public class SequenceGrabber extends JPanel
   {
     this.parent = parent;
     mPlayer = parent.mPlayer;
-
+    
+    op = new OutputProcessing();
     initForm();
   }
 
@@ -146,7 +152,16 @@ public class SequenceGrabber extends JPanel
               jfc.showSaveDialog(null);
               if (jfc.getSelectedFile() != null)
               {
-                SaveSequence(start, end, jfc.getSelectedFile().toString(), new Integer(fps.getText()));
+                //SaveSequence(start, end, jfc.getSelectedFile().toString(), new Integer(fps.getText()));//Fish's thing
+                  
+                  //Shelby's suggested thing
+                  snapshotTimer = new Timer();
+                  long rate = 1000/ Long.parseLong(fps.getText());
+                  //rate = (long)(1000 / mPlayer.getFps());//Makes the frame capture rate the frame rate
+                  mPlayer.setTime(start);
+                  mPlayer.setPause(false);
+                  snapshotTimer.purge();
+                  snapshotTimer.scheduleAtFixedRate(new Shutter(jfc.getSelectedFile().toString()), 0, rate);
               }
             }
             else
@@ -162,5 +177,37 @@ public class SequenceGrabber extends JPanel
           break;
       }
     }
+  }
+  
+  
+  private class Shutter extends TimerTask{
+      
+      private boolean isMore;
+      private ArrayList<BufferedImage> frames;
+      private String path;
+      
+      
+      public Shutter(String path){
+          this.path = path;
+          isMore = true;
+          frames = new ArrayList<>();
+      }
+
+        @Override
+        public void run() {
+            if(isMore){
+                frames.add(mPlayer.getSnapshot());
+                //mPlayer.nextFrame();//Just some crazy thing I tried
+                isMore = (mPlayer.getTime() < end);
+            }
+            else{
+                snapshotTimer.cancel();
+                mPlayer.setPause(true);
+                op.setFrames(frames);
+                op.processFrames(path);
+            }
+            
+        }
+      
   }
 }
