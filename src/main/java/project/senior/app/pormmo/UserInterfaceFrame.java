@@ -79,7 +79,7 @@ public class UserInterfaceFrame extends JFrame
   {
     JPanel[] tools = new JPanel[4];
     hsbPanel = new HSBPanel(this);
-    hsbPanel.setPreferredSize(new Dimension(100, 150));
+    hsbPanel.setPreferredSize(new Dimension(100, 130));
     tools[0] = hsbPanel;
 
     TolerancePanel tp = new TolerancePanel(outputPanel);
@@ -89,10 +89,6 @@ public class UserInterfaceFrame extends JFrame
     FilterPanel fp = new FilterPanel(this);
     fp.setMinimumSize(new Dimension(100, 200));
     tools[2] = fp;
-
-//    StartEndPanel sep = new StartEndPanel(mPlayer);
-//    sep.setMinimumSize(new Dimension(100, 200));
-//    tools[3] = sep;
 
     SequenceGrabber sg = new SequenceGrabber(this);
     tools[3] = sg;
@@ -239,16 +235,6 @@ public class UserInterfaceFrame extends JFrame
       }
     }
   }
-
-//  public void processSnapshot(BufferedImage givenSnapshot)
-//  {
-//    if (givenSnapshot != null)
-//    {
-//      outputPanel.DrawBufferedImage(givenSnapshot);
-//      outputPanel.setPreferredSize(new Dimension(me.getWidth(), me.getHeight() - pcp.getHeight()));
-//      hsbPanel.setImage(givenSnapshot);
-//    }
-//  }
 
   private class UserInterfaceFrameMenuListener extends MouseAdapter
   {
