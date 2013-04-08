@@ -37,7 +37,7 @@ public class FilterPanel extends JPanel
 
   private void initPanel()
   {
-    setPreferredSize(new Dimension(250, 100));
+    setPreferredSize(new Dimension(250, 200));
     setLayout(new BorderLayout());
   }
 
@@ -47,7 +47,7 @@ public class FilterPanel extends JPanel
     GridBagConstraints gbc = new GridBagConstraints();
     
     JPanel inner = new JPanel();
-    inner.setMinimumSize(new Dimension(100, 100));
+    inner.setMinimumSize(new Dimension(100, 200));
     inner.setLayout(gbl);
     
     gbc.gridx = 0;

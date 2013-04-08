@@ -11,6 +11,7 @@ package project.senior.app.pormmo;
 //----Help to not remove gray/black.
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
@@ -147,28 +148,30 @@ public class GSR
       }
     }   
     
+    BufferedImage output = new BufferedImage(bw.img.getWidth(), 
+                                            bw.img.getHeight(), 
+                                            BufferedImage.TYPE_INT_ARGB);
+    
+    Graphics G = output.createGraphics();
+    G.setColor(new Color(0,0,0,0));
+    G.fillRect(0, 0, output.getWidth(), output.getHeight());
+    
     for (int i = 0; i < before.img.getWidth(); i++)
     {
       for (int j = 0; j < before.img.getHeight(); j++)
       {
           c = new Color(bw.img.getRGB(i, j));
           
-          if(c.getRGB() == Color.GREEN.getRGB())
+          if(c.getRGB() != Color.GREEN.getRGB())
           {
-             before.img.setRGB(i, j, TRANSPARENT.getRGB()); 
+             //before.img.setRGB(i, j, TRANSPARENT.getRGB()); 
+            G.setColor(new Color(before.img.getRGB(i,j)));
+            G.fillRect(i, j, 1, 1);
           }
       }
     }
-
-    //::Was thinking about possible alpha composite for translucent
-//    Graphics gr = before.img.getGraphics();
-//    
-//    if(gr instanceof Graphics2D)
-//    {
-//      Graphics2D g2d = (Graphics2D)gr;
-//      g2d.setBackground(new Color(0,0,0));
-//      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
-//    }
+    
+    before.img = BufferedWrapper.CloneImg(output);
   }
   
   /**
@@ -181,6 +184,14 @@ public class GSR
    */
   public void RemoveGreen_2(BufferedWrapper before, float Ratio)
   { 
+    BufferedImage output = new BufferedImage(before.img.getWidth(), 
+                                             before.img.getHeight(), 
+                                             BufferedImage.TYPE_INT_ARGB);
+    
+    Graphics G = output.createGraphics();
+    G.setColor(new Color(0,0,0,0));
+    G.fillRect(0, 0, output.getWidth(), output.getHeight());
+    
     Color c;
     int r, g, b;
     float ratio = Ratio;
@@ -200,10 +211,24 @@ public class GSR
         if (g >= r && g >= b)
         {
           if(g > 100)//:dont remove black
-           before.img.setRGB(i, j, Color.TRANSLUCENT);
+          {
+           //before.img.setRGB(i, j, Color.TRANSLUCENT);
+          }
+          else
+          {
+            G.setColor(new Color(r,g,b, 255));
+            G.drawRect(i, j, 1, 1);
+          }
         }
-      }
-    }
+        else
+        {
+          G.setColor(new Color(r,g,b, 255));
+          G.drawRect(i, j, 1, 1);
+        }
+      }//:for[j]
+    }//:for[i]
+    
+    before.img = BufferedWrapper.CloneImg(output);
   }
 
   /**

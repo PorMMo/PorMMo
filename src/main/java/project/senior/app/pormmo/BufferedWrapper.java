@@ -1,5 +1,6 @@
 package project.senior.app.pormmo;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 /**
@@ -34,32 +35,22 @@ public class BufferedWrapper
    */
   public BufferedImage Clone()
   {
-    int iWidth = img.getWidth(), iHeight = img.getHeight();
-    BufferedImage newImage = new BufferedImage(iWidth, iHeight, img.getType());
-
-    for (int x = 0; x < iWidth; x++)
-    {
-      for (int y = 0; y < iHeight; y++)
-      {
-        newImage.setRGB(x, y, img.getRGB(x, y));
-      }
-    }
+    BufferedImage newImage = new BufferedImage(img.getWidth(), img.getHeight(),
+                                                   BufferedImage.TYPE_INT_ARGB);
+    
+    Graphics g = newImage.createGraphics();
+    g.drawImage(img, 0, 0, null);
 
     return newImage;
   }
   
   public static BufferedImage CloneImg(BufferedImage bi)
   {
-    int iWidth = bi.getWidth(), iHeight = bi.getHeight();
-    BufferedImage newImage = new BufferedImage(iWidth, iHeight, bi.getType());
-
-    for (int x = 0; x < iWidth; x++)
-    {
-      for (int y = 0; y < iHeight; y++)
-      {
-        newImage.setRGB(x, y, bi.getRGB(x, y));
-      }
-    }
+    BufferedImage newImage = new BufferedImage(bi.getWidth(), bi.getHeight(),
+                                                   BufferedImage.TYPE_INT_ARGB);
+    
+    Graphics g = newImage.createGraphics();
+    g.drawImage(bi, 0, 0, null);
 
     return newImage;
   }
