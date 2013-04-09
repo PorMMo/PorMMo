@@ -61,7 +61,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
     @Override
     public void finished(MediaPlayer mp)
     {
-      mPlayer.stop();
+//      mPlayer.stop();
       parent.FindSliderByName("PlayPosition").setValue(0);
       parent.FindButtonByName("Play").setText("Play");
     }

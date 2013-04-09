@@ -42,10 +42,13 @@ public class UserInterfaceFrame extends JFrame
   private BufferedWrapper BW;
   private Dimension screenSize;
   protected ImageContainer ic;
+  protected SequenceSettings seqSet;
 
   public UserInterfaceFrame()
   {
     TOLERANCE = 0.5f;
+    seqSet = new SequenceSettings();
+    
     initFrame();
     initMenu();
     initControlPanel();

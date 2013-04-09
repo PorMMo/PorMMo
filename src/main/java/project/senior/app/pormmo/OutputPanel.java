@@ -26,7 +26,7 @@ public class OutputPanel extends JPanel
   private BorderLayout bLayout;
   private boolean isCropping = false;
   private Point startCropPoint, stopCropPoint;
-  private UserInterfaceFrame parent;
+  protected UserInterfaceFrame parent;
 
   public OutputPanel()
   {
@@ -136,8 +136,14 @@ public class OutputPanel extends JPanel
     int w = stopCropPoint.x - startCropPoint.x;
     int h = stopCropPoint.y - startCropPoint.y;
 
+    parent.seqSet.setCropStart(startCropPoint);
+    parent.seqSet.setCropStop(stopCropPoint);
+            
     if(w>currentDisplay.getWidth()) w=currentDisplay.getWidth();
     if(h>currentDisplay.getHeight()) h=currentDisplay.getHeight();
+
+    parent.seqSet.setWidth(w);
+    parent.seqSet.setHeight(h);
     
     for (int i = 0; i < w; i++)
     {

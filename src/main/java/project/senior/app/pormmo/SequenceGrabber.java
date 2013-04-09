@@ -25,7 +25,7 @@ public class SequenceGrabber extends JPanel
 
   private Timer snapshotTimer;
   private OutputProcessing op;
-  private UserInterfaceFrame parent;
+  protected UserInterfaceFrame parent;
   private MediaPlayer mPlayer;
   private long start = 0, end = 0;
   private String savePath;
@@ -37,7 +37,7 @@ public class SequenceGrabber extends JPanel
     this.parent = parent;
     mPlayer = parent.mPlayer;
 
-    op = new OutputProcessing();
+    op = new OutputProcessing(this);
     initForm();
   }
 
@@ -106,6 +106,7 @@ public class SequenceGrabber extends JPanel
         case "End":
           end = mPlayer.getTime();
           sourceButton.setText("Sequence End: " + end);
+          if(mPlayer.isPlaying()) mPlayer.pause();
 
           break;
         case "SaveSequence":
@@ -158,7 +159,7 @@ public class SequenceGrabber extends JPanel
     public void run()
     {
       if (isMore)
-      {
+      {        
         frames.add(mPlayer.getSnapshot());
         //mPlayer.nextFrame();//Just some crazy thing I tried
         isMore = (mPlayer.getTime() < end);

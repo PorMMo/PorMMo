@@ -65,6 +65,7 @@ public class TolerancePanel extends JPanel
       public void stateChanged(ChangeEvent e)
       {
         T = (1.0f * tolerance.getValue()) / 100.0f;
+        main.parent.seqSet.setGsrTolerance(T);
       }
     });
     inner.add(tolerance, gbc);
