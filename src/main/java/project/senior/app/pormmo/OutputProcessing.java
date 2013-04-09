@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
 /**
@@ -48,30 +50,59 @@ public class OutputProcessing
     statusFrame.setPreferredSize(new Dimension(500, 100));
     JPanel content = new JPanel();
     JLabel status = new JLabel("Currently saving ");
-    statusFrame.add(content.add(status));
+    content.add(status);
+    
 
+    JProgressBar bar = new JProgressBar(0, frames.size());
+    bar.setValue(0);
+    bar.setStringPainted(true);
+    statusFrame.add(bar);
+    content.add(bar);
+    
+    statusFrame.add(content);
     statusFrame.pack();
     statusFrame.setVisible(true);
+    
+    String logOfFailedSaves = "Images that failed to save: \n";
 
     for (int i = 0; i < frames.size(); i++)
     {
       try
       {
         currentImage = frames.get(i);
-        cropWidth = parent.parent.seqSet.getWidth() > 0 ? parent.parent.seqSet.getWidth() : currentImage.getWidth();
-        cropHeight = parent.parent.seqSet.getHeight() > 0 ? parent.parent.seqSet.getHeight() : currentImage.getHeight();
-        cropStartX = parent.parent.seqSet.getCropStart().getX() > parent.parent.seqSet.getCropStop().getX() ? (int)parent.parent.seqSet.getCropStop().getX(): (int)parent.parent.seqSet.getCropStart().getX();
-        cropStartY = parent.parent.seqSet.getCropStart().getY() > parent.parent.seqSet.getCropStop().getY() ? (int)parent.parent.seqSet.getCropStop().getY(): (int)parent.parent.seqSet.getCropStart().getY();
+        bWrap = new BufferedWrapper(currentImage);
         
-        bWrap = new BufferedWrapper(currentImage.getSubimage(cropStartX, cropStartY, cropWidth, cropHeight));
+        //if there was no cropping, don't create a cropped image
+        if(parent.parent.seqSet.getCropStart() != null){
+            cropWidth = parent.parent.seqSet.getWidth() > 0 ? parent.parent.seqSet.getWidth() : currentImage.getWidth();
+            cropHeight = parent.parent.seqSet.getHeight() > 0 ? parent.parent.seqSet.getHeight() : currentImage.getHeight();
+
+
+
+
+            cropStartX = parent.parent.seqSet.getCropStart().getX() > parent.parent.seqSet.getCropStop().getX() ? (int)parent.parent.seqSet.getCropStop().getX(): (int)parent.parent.seqSet.getCropStart().getX();
+            cropStartY = parent.parent.seqSet.getCropStart().getY() > parent.parent.seqSet.getCropStop().getY() ? (int)parent.parent.seqSet.getCropStop().getY(): (int)parent.parent.seqSet.getCropStart().getY();
+
+            bWrap = new BufferedWrapper(currentImage.getSubimage(cropStartX, cropStartY, cropWidth, cropHeight));
+        }
+        
         gsr.RemoveGreen_3(bWrap, parent.parent.seqSet.getGsrTolerance());
-        status.setText("Currently saving " + path + "-" + i + ".png");
         ImageIO.write(bWrap.img, "png", new File(path + "-" + i + ".png"));
+        
       }
       catch (IOException ex)
       {
+          logOfFailedSaves = logOfFailedSaves + path + "-" + i + ".png" + "\n";
       }
+      catch(java.lang.NullPointerException ex)//I keep encountering null pointer exceptions that involve frames taken at the end of the video. We should just ignore those frames
+      {    
+          logOfFailedSaves = logOfFailedSaves + path + "-" + i + ".png" + "\n";
+      }
+      //moved progress to outside the try catch loop
+      status.setText("Currently saving " + path + "-" + i + ".png");
+      bar.setValue(i);
     }
     statusFrame.setVisible(false);
+    JOptionPane.showMessageDialog(parent, logOfFailedSaves);
   }
 }

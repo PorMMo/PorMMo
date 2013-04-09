@@ -151,21 +151,24 @@ public class SequenceGrabber extends JPanel
     public Shutter(String path)
     {
       this.path = path;
-      isMore = true;
+      
       frames = new ArrayList<>();
     }
 
     @Override
     public void run()
     {
-      if (isMore)
+      if ((mPlayer.getTime() < end) || mPlayer.isPlaying())//fixes a bug that occurs if the video is paused or stopped while frame grabbing
       {        
         frames.add(mPlayer.getSnapshot());
-        //mPlayer.nextFrame();//Just some crazy thing I tried
-        isMore = (mPlayer.getTime() < end);
+        
+       
       }
       else
       {
+          if(!mPlayer.isPlaying()){
+              JOptionPane.showMessageDialog(parent, "Video is not playing, so frame grabbing stopped.");//dialogue lets the user know that frame grabbing is not happenning. 
+          }
         snapshotTimer.cancel();
         mPlayer.setPause(true);
         op.setFrames(frames);
