@@ -62,8 +62,9 @@ public class OutputProcessing
     statusFrame.add(content);
     statusFrame.pack();
     statusFrame.setVisible(true);
+    int failcount = 0;
     
-    String logOfFailedSaves = "Images that failed to save: \n";
+    String logOfFailedSaves="";
 
     for (int i = 0; i < frames.size(); i++)
     {
@@ -90,19 +91,20 @@ public class OutputProcessing
         ImageIO.write(bWrap.img, "png", new File(path + "-" + i + ".png"));
         
       }
-      catch (IOException ex)
+      catch (IOException | java.lang.NullPointerException ex)
       {
           logOfFailedSaves = logOfFailedSaves + path + "-" + i + ".png" + "\n";
-      }
-      catch(java.lang.NullPointerException ex)//I keep encountering null pointer exceptions that involve frames taken at the end of the video. We should just ignore those frames
-      {    
-          logOfFailedSaves = logOfFailedSaves + path + "-" + i + ".png" + "\n";
+          failcount++;
       }
       //moved progress to outside the try catch loop
       status.setText("Currently saving " + path + "-" + i + ".png");
       bar.setValue(i);
     }
     statusFrame.setVisible(false);
-    JOptionPane.showMessageDialog(parent, logOfFailedSaves);
+    
+    if(failcount > 0){
+        logOfFailedSaves = "Images that failed to save: \n" + logOfFailedSaves;
+        JOptionPane.showMessageDialog(parent, logOfFailedSaves);
+    }
   }
 }

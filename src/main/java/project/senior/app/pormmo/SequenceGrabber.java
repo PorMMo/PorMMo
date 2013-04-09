@@ -121,7 +121,7 @@ public class SequenceGrabber extends JPanel
                 snapshotTimer = new Timer();
                 long rate = 1000 / Long.parseLong(fps.getText());
                 mPlayer.setTime(start);
-                mPlayer.setPause(false);
+                mPlayer.start();
                 snapshotTimer.purge();
                 snapshotTimer.scheduleAtFixedRate(new Shutter(jfc.getSelectedFile().toString()), 0, rate);
               }
@@ -143,8 +143,6 @@ public class SequenceGrabber extends JPanel
 
   private class Shutter extends TimerTask
   {
-
-    private boolean isMore;
     private ArrayList<BufferedImage> frames;
     private String path;
 
@@ -158,17 +156,12 @@ public class SequenceGrabber extends JPanel
     @Override
     public void run()
     {
-      if ((mPlayer.getTime() < end) || mPlayer.isPlaying())//fixes a bug that occurs if the video is paused or stopped while frame grabbing
+      if ((mPlayer.getTime() < end) && mPlayer.isPlaying())//fixes a bug that occurs if the video is paused or stopped while frame grabbing
       {        
         frames.add(mPlayer.getSnapshot());
-        
-       
       }
       else
       {
-          if(!mPlayer.isPlaying()){
-              JOptionPane.showMessageDialog(parent, "Video is not playing, so frame grabbing stopped.");//dialogue lets the user know that frame grabbing is not happenning. 
-          }
         snapshotTimer.cancel();
         mPlayer.setPause(true);
         op.setFrames(frames);
