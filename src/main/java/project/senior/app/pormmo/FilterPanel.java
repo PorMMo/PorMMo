@@ -71,6 +71,7 @@ public class FilterPanel extends JPanel
         Filters.GrayScaleStatic(bw);
         parent.ic.setCurrentlyDisplayImage(bw.img);
         main.ReDrawOutputPanel();
+        parent.seqOrder.AddAction(parent.seqOrder.GS);
       }
     });
     inner.add(grays, gbc);
@@ -88,6 +89,7 @@ public class FilterPanel extends JPanel
         Filters.MeanBlurStatic(bw);
         parent.ic.setCurrentlyDisplayImage(bw.img);
         main.ReDrawOutputPanel();
+        parent.seqOrder.AddAction(parent.seqOrder.MEAN);
       }
     });
     inner.add(mean, gbc);
@@ -105,6 +107,7 @@ public class FilterPanel extends JPanel
         Filters.MedianBlurStatic(bw);
         parent.ic.setCurrentlyDisplayImage(bw.img);
         main.ReDrawOutputPanel();
+        parent.seqOrder.AddAction(parent.seqOrder.MEDIAN);
       }
     });
     inner.add(median, gbc);
@@ -122,6 +125,7 @@ public class FilterPanel extends JPanel
         Filters.GaussianBlurStatic(bw);
         parent.ic.setCurrentlyDisplayImage(bw.img);
         main.ReDrawOutputPanel();
+        parent.seqOrder.AddAction(parent.seqOrder.GAUSSIAN);
       }
     });
     inner.add(gaussian, gbc);
@@ -140,6 +144,7 @@ public class FilterPanel extends JPanel
         Filters.BitFilter(bw, Filters.SixteenBit);
         parent.ic.setCurrentlyDisplayImage(bw.img);
         main.ReDrawOutputPanel();
+        parent.seqOrder.AddAction(parent.seqOrder.P16B);
       }
     });
     inner.add(sbit, gbc);

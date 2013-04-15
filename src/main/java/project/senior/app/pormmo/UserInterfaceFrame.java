@@ -25,7 +25,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
  */
 public class UserInterfaceFrame extends JFrame
 {
-
+  public SequenceOrder seqOrder;
   public float TOLERANCE;
   private ScrollPane tPane;
   protected HSBPanel hsbPanel;
@@ -48,6 +48,7 @@ public class UserInterfaceFrame extends JFrame
   {
     TOLERANCE = 0.5f;
     seqSet = new SequenceSettings();
+    seqOrder = new SequenceOrder();
     
     initFrame();
     initMenu();
@@ -85,7 +86,7 @@ public class UserInterfaceFrame extends JFrame
     hsbPanel.setPreferredSize(new Dimension(100, 130));
     tools[0] = hsbPanel;
 
-    TolerancePanel tp = new TolerancePanel(outputPanel);
+    TolerancePanel tp = new TolerancePanel(outputPanel, this);
     tp.setMinimumSize(new Dimension(100, 100));
     tools[1] = tp;
 

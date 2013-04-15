@@ -86,6 +86,7 @@ public class PlayerControlPanelButtonMouseListener extends MouseAdapter
             parent.parent.ic.backupCurrentDisplayImage();
             parent.parent.ic.setCurrentlyDisplayImage(parent.parent.ic.getLastSnapshot());
             parent.parent.outputPanel.ReDrawOutputPanel();
+            parent.parent.seqOrder.Reset();
             break;
 
           case "snapshot":

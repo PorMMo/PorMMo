@@ -16,16 +16,18 @@ import javax.swing.event.ChangeListener;
  */
 public class TolerancePanel extends JPanel
 {
+  private UserInterfaceFrame uif;
   private JSlider tolerance;
   private BufferedWrapper bw;
   private GSR gsr;
   private OutputPanel main;
   private float T;
   
-  public TolerancePanel(OutputPanel op)
+  public TolerancePanel(OutputPanel op, UserInterfaceFrame uif)
   {
     bw = new BufferedWrapper();
     main = op;
+    this.uif = uif;
     gsr = new GSR();
     initPanel();
     initControls();
@@ -88,6 +90,7 @@ public class TolerancePanel extends JPanel
           bw.img = main.GetLatestBI();
           gsr.RemoveGreen_3(bw, T);
           main.DrawBufferedImage(bw.img);
+          uif.seqOrder.AddAction(uif.seqOrder.REMOVE_PRE);
         }
       }
     });
@@ -107,6 +110,7 @@ public class TolerancePanel extends JPanel
           bw.img = main.GetLatestBI();
           gsr.RemoveGreen_2(bw, T);
           main.DrawBufferedImage(bw.img);
+          uif.seqOrder.AddAction(uif.seqOrder.REMOVE_POST);
         }
       }
     });
