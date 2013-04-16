@@ -10,6 +10,27 @@ public class SequenceSettings {
   private Point cropStart, cropStop;
   private int width, height;
   private float gsrTolerance;
+  private int brightness, saturation;  
+
+  public int getBrightness()
+  {
+    return brightness;
+  }
+
+  public void setBrightness(int brightness)
+  {
+    this.brightness = brightness;
+  }
+
+  public int getSaturation()
+  {
+    return saturation;
+  }
+
+  public void setSaturation(int saturation)
+  {
+    this.saturation = saturation;
+  }
 
   public float getGsrTolerance()
   {

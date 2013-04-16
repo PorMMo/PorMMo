@@ -18,15 +18,15 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
  */
 public class OutputProcessing
 {
+
   SequenceGrabber parent;
   MediaPlayer mPlayer;
-  
+
   public OutputProcessing(SequenceGrabber parent)
   {
     this.parent = parent;
     mPlayer = parent.parent.mPlayer;
   }
-  
   private ArrayList<BufferedImage> frames;
 
   public ArrayList<BufferedImage> getFrames()
@@ -51,20 +51,20 @@ public class OutputProcessing
     JPanel content = new JPanel();
     JLabel status = new JLabel("Currently saving ");
     content.add(status);
-    
+
 
     JProgressBar bar = new JProgressBar(0, frames.size());
     bar.setValue(0);
     bar.setStringPainted(true);
     statusFrame.add(bar);
     content.add(bar);
-    
+
     statusFrame.add(content);
     statusFrame.pack();
     statusFrame.setVisible(true);
     int failcount = 0;
-    
-    String logOfFailedSaves="";
+
+    String logOfFailedSaves = "";
 
     for (int i = 0; i < frames.size(); i++)
     {
@@ -72,39 +72,39 @@ public class OutputProcessing
       {
         currentImage = frames.get(i);
         bWrap = new BufferedWrapper(currentImage);
-        
+
         //if there was no cropping, don't create a cropped image
-        if(parent.parent.seqSet.getCropStart() != null){
-            cropWidth = parent.parent.seqSet.getWidth() > 0 ? parent.parent.seqSet.getWidth() : currentImage.getWidth();
-            cropHeight = parent.parent.seqSet.getHeight() > 0 ? parent.parent.seqSet.getHeight() : currentImage.getHeight();
+        if (parent.parent.seqSet.getCropStart() != null)
+        {
+          cropWidth = parent.parent.seqSet.getWidth() > 0 ? parent.parent.seqSet.getWidth() : currentImage.getWidth();
+          cropHeight = parent.parent.seqSet.getHeight() > 0 ? parent.parent.seqSet.getHeight() : currentImage.getHeight();
 
+          cropStartX = parent.parent.seqSet.getCropStart().getX() > parent.parent.seqSet.getCropStop().getX() ? (int) parent.parent.seqSet.getCropStop().getX() : (int) parent.parent.seqSet.getCropStart().getX();
+          cropStartY = parent.parent.seqSet.getCropStart().getY() > parent.parent.seqSet.getCropStop().getY() ? (int) parent.parent.seqSet.getCropStop().getY() : (int) parent.parent.seqSet.getCropStart().getY();
 
-
-
-            cropStartX = parent.parent.seqSet.getCropStart().getX() > parent.parent.seqSet.getCropStop().getX() ? (int)parent.parent.seqSet.getCropStop().getX(): (int)parent.parent.seqSet.getCropStart().getX();
-            cropStartY = parent.parent.seqSet.getCropStart().getY() > parent.parent.seqSet.getCropStop().getY() ? (int)parent.parent.seqSet.getCropStop().getY(): (int)parent.parent.seqSet.getCropStart().getY();
-
-            bWrap = new BufferedWrapper(currentImage.getSubimage(cropStartX, cropStartY, cropWidth, cropHeight));
+          bWrap = new BufferedWrapper(currentImage.getSubimage(cropStartX, cropStartY, cropWidth, cropHeight));
         }
-        
-        gsr.RemoveGreen_3(bWrap, parent.parent.seqSet.getGsrTolerance());
+
+        parent.parent.seqOrder.ApplySequence(bWrap, parent.parent.seqSet.getGsrTolerance());
+
         ImageIO.write(bWrap.img, "png", new File(path + "-" + i + ".png"));
-        
+
       }
       catch (IOException | java.lang.NullPointerException ex)
       {
-          logOfFailedSaves = logOfFailedSaves + path + "-" + i + ".png" + "\n";
-          failcount++;
+        logOfFailedSaves = logOfFailedSaves + path + "-" + i + ".png" + "\n";
+        failcount++;
       }
       //moved progress to outside the try catch loop
       status.setText("Currently saving " + path + "-" + i + ".png");
       bar.setValue(i);
     }
     statusFrame.setVisible(false);
-    
-    if(failcount > 0){
-        logOfFailedSaves = "Images that failed to save: \n" + logOfFailedSaves;
-        JOptionPane.showMessageDialog(parent, logOfFailedSaves);
+
+    if (failcount > 0)
+    {
+      logOfFailedSaves = "Images that failed to save: \n" + logOfFailedSaves;
+      JOptionPane.showMessageDialog(parent, logOfFailedSaves);
     }
   }
 }

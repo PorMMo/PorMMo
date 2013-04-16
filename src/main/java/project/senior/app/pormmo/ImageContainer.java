@@ -11,6 +11,17 @@ public class ImageContainer {
   private BufferedImage currentDisplayImage;
   private BufferedImage lastSnapshot;
   private BufferedImage currentDisplayImageBackup;
+  private BufferedImage workingCopy;
+
+  public BufferedImage getWorkingCopy()
+  {
+    return workingCopy;
+  }
+
+  public void setWorkingCopy(BufferedImage workingCopy)
+  {
+    this.workingCopy = workingCopy;
+  }
 
   public BufferedImage getCurrentlyDisplayImage()
   {
@@ -19,7 +30,10 @@ public class ImageContainer {
   
   public Dimension getCurrentDisplayImageDimension()
   {
-    return new Dimension(currentDisplayImage.getWidth(), currentDisplayImage.getHeight());
+    if(currentDisplayImage!=null)
+      return new Dimension(currentDisplayImage.getWidth(), currentDisplayImage.getHeight());
+    
+    return new Dimension(0,0);
   }
   
   public void setCurrentlyDisplayImage(BufferedImage currentlyDisplayImage)
