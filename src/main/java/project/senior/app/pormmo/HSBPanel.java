@@ -138,6 +138,9 @@ public class HSBPanel extends JPanel
       parent.seqSet.setBrightness(brightnessSlider.getValue());
       parent.seqSet.setSaturation(saturationSlider.getValue());
 
+      BrightnessSaturationSettings bss = new BrightnessSaturationSettings(brightnessSlider.getValue(), saturationSlider.getValue());
+      parent.seqOrder.AddAction(parent.seqOrder.BRIGHTNESS_SAT, bss);
+      
       resetSliders();
     }
   }
@@ -173,8 +176,10 @@ public class HSBPanel extends JPanel
     }
     else
     {
+      if(!intraStateBackup)
+        parent.ic.setWorkingCopy(parent.ic.getCurrentlyDisplayImage());
+      
       intraStateBackup = true;
-      parent.ic.setWorkingCopy(parent.ic.getCurrentlyDisplayImage());
     }
   }
 
@@ -214,18 +219,18 @@ public class HSBPanel extends JPanel
       me.validate();
       me.repaint();
 
-      switch (sliderOfInteraction.getName())
-      {
-        case "brightness":
-          Brightness.AdjustBrightness(bw, sliderOfInteraction.getValue());
-          parent.seqOrder.AddAction(parent.seqOrder.BRIGHT);
-          break;//:End brightness
-
-        case "saturation":
-          Saturation.AdjustSaturation(bw, sliderOfInteraction.getValue());
-          parent.seqOrder.AddAction(parent.seqOrder.SAT);
-          break;//:End saturation
-      }
+//      switch (sliderOfInteraction.getName())
+//      {
+//        case "brightness":
+          Brightness.AdjustBrightness(bw, brightnessSlider.getValue());
+////          parent.seqOrder.AddAction(parent.seqOrder.BRIGHT);
+//          break;//:End brightness
+//
+//        case "saturation":
+          Saturation.AdjustSaturation(bw, saturationSlider.getValue());
+////          parent.seqOrder.AddAction(parent.seqOrder.SAT);
+//          break;//:End saturation
+//      }
 
       parent.ic.setCurrentlyDisplayImage(bw.img);
       parent.outputPanel.ReDrawOutputPanel();

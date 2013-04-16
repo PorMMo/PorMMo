@@ -26,6 +26,7 @@ public class Brightness
     {
       for (int y = 0; y < bw.img.getHeight(); y++)
       {
+        if(bw.img.getRGB(x,y) == 0) continue;
         newColor = new Color(bw.img.getRGB(x, y));
         Color.RGBtoHSB(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), hsbvals);
 

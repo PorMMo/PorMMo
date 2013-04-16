@@ -1,5 +1,7 @@
 package project.senior.app.pormmo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Shelby Copeland
@@ -7,6 +9,7 @@ package project.senior.app.pormmo;
 public class SequenceOrder
 {
   private String order;
+  private ArrayList<BrightnessSaturationSettings> bss;
   
   public final int GS = 1,
                    MEDIAN = 2,
@@ -15,10 +18,13 @@ public class SequenceOrder
                    P16B = 5,
                    REMOVE_POST = 6,
                    REMOVE_PRE = 7,
-                   BRIGHT = 8,
-                   SAT = 9;
+                   BRIGHTNESS_SAT = 8;
   
-  public SequenceOrder(){order = "";}
+  public SequenceOrder()
+  {
+      order = "";
+      bss = new ArrayList<>();
+  }
   
   /**
    * For a list of actions, call your SequenceOrder object for a list
@@ -31,6 +37,10 @@ public class SequenceOrder
     order += action + "";
   }
   
+  public void AddAction(int action, BrightnessSaturationSettings bs){
+      order += action + "";
+      bss.add(bs);
+  }
   
   private void TEST()
   {
@@ -68,6 +78,7 @@ public class SequenceOrder
    */
   public void ApplySequence(BufferedWrapper bw, float ratio)
   {
+    int which = 0;
     int[] order = GetOrder();
     GSR gsr = new GSR();
     
@@ -103,12 +114,10 @@ public class SequenceOrder
           gsr.RemoveGreen_3(bw, ratio);
           break;
 //============================================================================== 
-        case BRIGHT:
-          Brightness.AdjustBrightness(bw, (int)ratio);
-          break;
-//============================================================================== 
-        case SAT:
-          Saturation.AdjustSaturation(bw, (int)ratio);
+        case BRIGHTNESS_SAT:
+          Brightness.AdjustBrightness(bw,(int)(bss.get(which)).getSettings()[0]);
+          Saturation.AdjustSaturation(bw,(int)(bss.get(which)).getSettings()[1]);
+          which++;
           break;
       }
     }//:end foreach
