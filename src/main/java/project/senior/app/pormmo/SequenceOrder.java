@@ -58,4 +58,49 @@ public class SequenceOrder
     
     return ret;
   }
+  
+  /**
+   * Applies the order to the current image.
+   * 
+   * @param bw The Image (no green removed yet).
+   */
+  public void ApplySequence(BufferedWrapper bw, float ratio)
+  {
+    int[] order = GetOrder();
+    GSR gsr = new GSR();
+    
+    for(int i : order)
+    {
+      switch(i)
+      {
+        case GS: //grayscale
+          Filters.GrayScaleStatic(bw);
+          break;
+//==============================================================================
+        case MEAN:
+          Filters.MeanBlurStatic(bw);
+          break;
+//============================================================================== 
+        case MEDIAN:
+          Filters.MedianBlurStatic(bw);
+          break;
+//==============================================================================
+        case GAUSSIAN:
+          Filters.GaussianBlurStatic(bw);
+          break;
+//============================================================================== 
+        case P16B:
+          Filters.BitFilter(bw, Filters.SixteenBit);
+          break;
+//==============================================================================
+        case REMOVE_POST:
+          gsr.RemoveGreen_2(bw, ratio);
+          break;
+//============================================================================== 
+        case REMOVE_PRE:
+          gsr.RemoveGreen_3(bw, ratio);
+          break;
+      }
+    }//:end foreach
+  }
 }
