@@ -2,7 +2,7 @@ package project.senior.app.pormmo;
 
 /**
  *
- * @author 
+ * @author Shelby Copeland, John Fisher
  */
 public class BrightnessSaturationSettings
 {

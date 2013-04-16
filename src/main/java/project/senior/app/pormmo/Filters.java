@@ -309,10 +309,10 @@ public class Filters
   public static void GrayScaleStatic(BufferedWrapper bw)
   {
     BufferedImage img = bw.Clone();
-    
+
     Graphics g = img.createGraphics();
-    
-    
+
+
     Color c, end;
     int t;
 
@@ -321,9 +321,12 @@ public class Filters
       for (int j = 0; j < bw.img.getHeight(); j++)
       {
         c = new Color(bw.img.getRGB(i, j));
-        
-        if(c.equals(Color.BLACK) ) continue;
-        
+
+        if (c.equals(Color.BLACK))
+        {
+          continue;
+        }
+
         t = c.getRed();
         t += c.getGreen();
         t += c.getBlue();
@@ -406,8 +409,11 @@ public class Filters
         //:^Yes this "could" be in a for loop
         //:However, that is just extra computation for a small amount.
 
-        if(mask[4] == 0) continue;
-        
+        if (mask[4] == 0)
+        {
+          continue;
+        }
+
         img.setRGB(i, j, gaussian(mask));
       }
     }
@@ -480,7 +486,10 @@ public class Filters
           for (int j = 0; j < h_Squares; j++)
           {
             c = GetColor(temp, i, j, s);
-            if(c.getRGB() == Color.BLACK.getRGB()) continue;
+            if (c.getRGB() == Color.BLACK.getRGB())
+            {
+              continue;
+            }
 
             for (int k = 0; k < s; k++)
             {

@@ -9,7 +9,6 @@ package project.senior.app.pormmo;
 
 //:TODO -> Possibly add a control for allowing a non-removal of a certain G lvl.
 //----Help to not remove gray/black.
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -22,9 +21,10 @@ import javax.imageio.ImageIO;
  */
 public class GSR
 {
+
   public final float GREEN = 0.33f;
   public final float BLUE = 0.66f;
-  private final Color TRANSPARENT = new Color(0,0,0,0);
+  private final Color TRANSPARENT = new Color(0, 0, 0, 0);
   //Possible add more colours?
 
   /**
@@ -118,12 +118,12 @@ public class GSR
   {
     BufferedWrapper bw = new BufferedWrapper();
     bw.img = BufferedWrapper.CloneImg(before.img);
-    
-    Filters.GaussianBlurStatic(bw); 
+
+    Filters.GaussianBlurStatic(bw);
     Filters.MeanBlurStatic(bw);
     Filters.GaussianBlurStatic(bw);
     Filters.GaussianBlurStatic(bw);
-    
+
     Color c;
     int r, g, b;
     float ratio = Ratio;
@@ -142,38 +142,45 @@ public class GSR
         g += 1;//:Lenient
         if (g >= r && g >= b)
         {
-          if(g > 100)//:dont remove black
+          if (g > 100)//:dont remove black
+          {
             bw.img.setRGB(i, j, Color.GREEN.getRGB());
+          }
         }
       }
-    }   
-    
-    BufferedImage output = new BufferedImage(bw.img.getWidth(), 
-                                            bw.img.getHeight(), 
-                                            BufferedImage.TYPE_INT_ARGB);
-    
+    }
+
+    BufferedImage output = new BufferedImage(bw.img.getWidth(),
+            bw.img.getHeight(),
+            BufferedImage.TYPE_INT_ARGB);
+
     Graphics G = output.createGraphics();
-    G.setColor(new Color(0,0,0,0));
+    G.setColor(new Color(0, 0, 0, 0));
     G.fillRect(0, 0, output.getWidth(), output.getHeight());
-    
+
     for (int i = 0; i < before.img.getWidth(); i++)
     {
       for (int j = 0; j < before.img.getHeight(); j++)
       {
-          c = new Color(bw.img.getRGB(i, j));
-          
-          if(c.getRGB() != Color.GREEN.getRGB())
-          {
-             //before.img.setRGB(i, j, TRANSPARENT.getRGB()); 
-            G.setColor(new Color(before.img.getRGB(i,j)));
-            G.fillRect(i, j, 1, 1);
-          }
+        if (before.img.getRGB(i, j) == 0)
+        {
+          continue;
+        }
+
+        c = new Color(bw.img.getRGB(i, j));
+
+        if (c.getRGB() != Color.GREEN.getRGB())
+        {
+          //before.img.setRGB(i, j, TRANSPARENT.getRGB()); 
+          G.setColor(new Color(before.img.getRGB(i, j)));
+          G.fillRect(i, j, 1, 1);
+        }
       }
     }
-    
+
     before.img = BufferedWrapper.CloneImg(output);
   }
-  
+
   /**
    * This method relies on a ratio of green to red/blue as per suggestion by
    * Fish.
@@ -183,15 +190,15 @@ public class GSR
    * @return Image with most/all green removed.
    */
   public void RemoveGreen_2(BufferedWrapper before, float Ratio)
-  { 
-    BufferedImage output = new BufferedImage(before.img.getWidth(), 
-                                             before.img.getHeight(), 
-                                             BufferedImage.TYPE_INT_ARGB);
-    
+  {
+    BufferedImage output = new BufferedImage(before.img.getWidth(),
+            before.img.getHeight(),
+            BufferedImage.TYPE_INT_ARGB);
+
     Graphics G = output.createGraphics();
-    G.setColor(new Color(0,0,0,0));
+    G.setColor(new Color(0, 0, 0, 0));
     G.fillRect(0, 0, output.getWidth(), output.getHeight());
-    
+
     Color c;
     int r, g, b;
     float ratio = Ratio;
@@ -201,6 +208,11 @@ public class GSR
     {
       for (int j = 0; j < before.img.getHeight(); j++)
       {
+        if (before.img.getRGB(i, j) == 0)
+        {
+          continue;
+        }
+
         c = new Color(before.img.getRGB(i, j));
         r = c.getRed();
         b = c.getBlue();
@@ -210,24 +222,24 @@ public class GSR
         g += 1;//:Lenient
         if (g >= r && g >= b)
         {
-          if(g > 100)//:dont remove black
+          if (g > 100)//:dont remove black
           {
-           //before.img.setRGB(i, j, Color.TRANSLUCENT);
+            //before.img.setRGB(i, j, Color.TRANSLUCENT);
           }
           else
           {
-            G.setColor(new Color(r,g,b, 255));
+            G.setColor(new Color(r, g, b, 255));
             G.drawRect(i, j, 1, 1);
           }
         }
         else
         {
-          G.setColor(new Color(r,g,b, 255));
+          G.setColor(new Color(r, g, b, 255));
           G.drawRect(i, j, 1, 1);
         }
       }//:for[j]
     }//:for[i]
-    
+
     before.img = BufferedWrapper.CloneImg(output);
   }
 
