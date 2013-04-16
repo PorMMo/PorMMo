@@ -14,7 +14,9 @@ public class SequenceOrder
                    GAUSSIAN = 4,
                    P16B = 5,
                    REMOVE_POST = 6,
-                   REMOVE_PRE = 7;
+                   REMOVE_PRE = 7,
+                   BRIGHT = 8,
+                   SAT = 9;
   
   public SequenceOrder(){order = "";}
   
@@ -99,6 +101,14 @@ public class SequenceOrder
 //============================================================================== 
         case REMOVE_PRE:
           gsr.RemoveGreen_3(bw, ratio);
+          break;
+//============================================================================== 
+        case BRIGHT:
+          Brightness.AdjustBrightness(bw, (int)ratio);
+          break;
+//============================================================================== 
+        case SAT:
+          Saturation.AdjustSaturation(bw, (int)ratio);
           break;
       }
     }//:end foreach

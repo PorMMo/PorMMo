@@ -8,9 +8,11 @@ import java.awt.image.BufferedImage;
  */
 public class Brightness
 {
-
-  public Brightness()
+  private HSBPanel parent;
+  
+  public Brightness(HSBPanel parent)
   {
+    this.parent = parent;
   }
 
   public static void AdjustBrightness(BufferedWrapper bw, int adjustQuantity)

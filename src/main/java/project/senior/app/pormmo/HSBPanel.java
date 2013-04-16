@@ -30,7 +30,7 @@ public class HSBPanel extends JPanel
   private JSlider saturationSlider, brightnessSlider;
   private UserInterfaceFrame parent;
   private boolean intraStateBackup = false;
-  
+
   public HSBPanel(UserInterfaceFrame parent)
   {
     this.parent = parent;
@@ -134,7 +134,7 @@ public class HSBPanel extends JPanel
       }
 
       parent.ic.setWorkingCopy(parent.ic.getCurrentlyDisplayImage());
-      intraStateBackup = false;
+      stopEdit();
       parent.seqSet.setBrightness(brightnessSlider.getValue());
       parent.seqSet.setSaturation(saturationSlider.getValue());
 
@@ -218,10 +218,12 @@ public class HSBPanel extends JPanel
       {
         case "brightness":
           Brightness.AdjustBrightness(bw, sliderOfInteraction.getValue());
+          parent.seqOrder.AddAction(parent.seqOrder.BRIGHT);
           break;//:End brightness
 
         case "saturation":
           Saturation.AdjustSaturation(bw, sliderOfInteraction.getValue());
+          parent.seqOrder.AddAction(parent.seqOrder.SAT);
           break;//:End saturation
       }
 
