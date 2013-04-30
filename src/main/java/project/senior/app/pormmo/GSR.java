@@ -177,7 +177,7 @@ public class GSR
         }
       }
     }
-
+    
     before.img = BufferedWrapper.CloneImg(output);
   }
 
@@ -191,29 +191,18 @@ public class GSR
    */
   public void RemoveGreen_2(BufferedWrapper before, float Ratio)
   {
-    BufferedImage output = new BufferedImage(before.img.getWidth(),
-            before.img.getHeight(),
-            BufferedImage.TYPE_INT_ARGB);
-
-    Graphics G = output.createGraphics();
-    G.setColor(new Color(0, 0, 0, 0));
-    G.fillRect(0, 0, output.getWidth(), output.getHeight());
+    BufferedWrapper bw = new BufferedWrapper();
+    bw.img = BufferedWrapper.CloneImg(before.img);
 
     Color c;
     int r, g, b;
     float ratio = Ratio;
-    Color a = new Color(4);
 
-    for (int i = 0; i < before.img.getWidth(); i++)
+    for (int i = 0; i < bw.img.getWidth(); i++)
     {
-      for (int j = 0; j < before.img.getHeight(); j++)
+      for (int j = 0; j < bw.img.getHeight(); j++)
       {
-        if (before.img.getRGB(i, j) == 0)
-        {
-          continue;
-        }
-
-        c = new Color(before.img.getRGB(i, j));
+        c = new Color(bw.img.getRGB(i, j));
         r = c.getRed();
         b = c.getBlue();
         g = c.getGreen();
@@ -224,22 +213,40 @@ public class GSR
         {
           if (g > 100)//:dont remove black
           {
-            //before.img.setRGB(i, j, Color.TRANSLUCENT);
-          }
-          else
-          {
-            G.setColor(new Color(r, g, b, 255));
-            G.drawRect(i, j, 1, 1);
+            bw.img.setRGB(i, j, Color.GREEN.getRGB());
           }
         }
-        else
-        {
-          G.setColor(new Color(r, g, b, 255));
-          G.drawRect(i, j, 1, 1);
-        }
-      }//:for[j]
-    }//:for[i]
+      }
+    }
 
+    BufferedImage output = new BufferedImage(bw.img.getWidth(),
+            bw.img.getHeight(),
+            BufferedImage.TYPE_INT_ARGB);
+
+    Graphics G = output.createGraphics();
+    G.setColor(new Color(0, 0, 0, 0));
+    G.fillRect(0, 0, output.getWidth(), output.getHeight());
+
+    for (int i = 0; i < before.img.getWidth(); i++)
+    {
+      for (int j = 0; j < before.img.getHeight(); j++)
+      {
+        if (before.img.getRGB(i, j) == 0)
+        {
+          continue;
+        }
+
+        c = new Color(bw.img.getRGB(i, j));
+
+        if (c.getRGB() != Color.GREEN.getRGB())
+        {
+          //before.img.setRGB(i, j, TRANSPARENT.getRGB()); 
+          G.setColor(new Color(before.img.getRGB(i, j)));
+          G.fillRect(i, j, 1, 1);
+        }
+      }
+    }
+    
     before.img = BufferedWrapper.CloneImg(output);
   }
 

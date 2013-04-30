@@ -59,7 +59,7 @@ public class TolerancePanel extends JPanel
     tolerance.setMinimum(0);
     tolerance.setMaximum(100);
     tolerance.setSnapToTicks(true);
-    tolerance.setMajorTickSpacing(10);
+    tolerance.setMajorTickSpacing(1);
     tolerance.setValue(50);
     tolerance.addChangeListener(new ChangeListener()
     {
