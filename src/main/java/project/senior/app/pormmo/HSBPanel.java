@@ -21,7 +21,6 @@ import javax.swing.event.ChangeListener;
 public class HSBPanel extends JPanel
 {
 
-//  private BufferedImage bi;
     private BorderLayout bl;
     private JPanel controlPanel;
     private OutputPanel oPanel;

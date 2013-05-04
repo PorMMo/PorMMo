@@ -80,12 +80,6 @@ public class SequenceGrabber extends JPanel
     gbs.gridx = 0;
     gbs.gridy = 3;
     add(saveSequence, gbs);
-
-    pos = new JLabel("0");
-    gbs.gridx = 0;
-    gbs.gridy = 4;
-    add(pos, gbs);
-
   }
 
   private class ButtonListener extends MouseAdapter
